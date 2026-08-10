@@ -1,0 +1,9 @@
+*.swp
+.DS_Store
+
+# never let machine state or secrets in
+.credentials.json
+history.jsonl
+sessions/
+projects/
+session-env/
