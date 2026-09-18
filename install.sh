@@ -123,6 +123,12 @@ link tool-versions        .tool-versions
 link config/starship.toml .config/starship.toml
 link config/nvim          .config/nvim
 
+# Claude Code skills: one symlink per folder under claude/skills/.
+for skill in "$REPO"/claude/skills/*/; do
+  name="$(basename "$skill")"
+  link "claude/skills/$name" ".claude/skills/$name"
+done
+
 # ---------------------------------------------------------------- node & npm tools
 echo "Node"
 asdf plugin list 2>/dev/null | grep -qx nodejs || asdf plugin add nodejs

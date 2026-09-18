@@ -21,6 +21,7 @@ skipped, and anything a symlink would replace is moved to
 | `tool-versions` | `~/.tool-versions` | global asdf versions (Node) |
 | `config/starship.toml` | `~/.config/starship.toml` | pastel-powerline preset |
 | `config/nvim/` | `~/.config/nvim` | LazyVim; `lazy-lock.json` pins every plugin |
+| `claude/skills/*` | `~/.claude/skills/*` | one symlink per skill; must stay employer-neutral |
 
 ## What install.sh installs
 
@@ -40,4 +41,6 @@ skipped, and anything a symlink would replace is moved to
   sourced when present and never tracked. Put per-directory git identities
   (`includeIf`) and extra PATH entries there.
 - **Claude Code and Codex settings**: both tools manage their own config.
+- **Work-specific Claude skills**: live untracked in `~/.claude/skills/` next to
+  the ones linked from here.
 - **Nerd Font**: the starship preset needs one; install and select it by hand.
