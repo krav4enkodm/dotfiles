@@ -1,0 +1,12 @@
+[user]
+	name = Dmitry Kravchenko
+	email = krav4enkodm@gmail.com
+[credential "https://github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/usr/bin/gh auth git-credential
+# Machine-specific settings (e.g. a per-directory work identity) live outside the repo.
+[include]
+	path = ~/.gitconfig.local
