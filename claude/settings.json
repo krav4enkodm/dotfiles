@@ -3,19 +3,30 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
+  "theme": "dark",
+  "tui": "fullscreen",
   "statusLine": {
     "type": "command",
     "command": "bash \"$HOME/.claude/statusline-command.sh\""
   },
   "enabledPlugins": {
-    "figma@claude-plugins-official": true
+    "figma@claude-plugins-official": true,
+    "cloudflare@cloudflare": true,
+    "posthog@anthropic-plugin-directory": true
+  },
+  "extraKnownMarketplaces": {
+    "cloudflare": {
+      "source": {
+        "source": "github",
+        "repo": "cloudflare/skills"
+      }
+    }
   },
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
-  "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,
-  "tui": "fullscreen"
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }
