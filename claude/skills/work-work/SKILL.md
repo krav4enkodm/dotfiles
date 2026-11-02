@@ -16,7 +16,7 @@ human      →  reviews the draft PR; iterates through the worker pane or PR com
 
 The ticket is the contract between the steps. The validator checks the code against the ticket, so a vague ticket can't be validated. If the ticket doesn't meet [the Definition of Ready](../plan-work/references/definition-of-ready.md), stop and suggest running `plan-work` on it first.
 
-The output is a ticket that meets the [Definition of Done](references/definition-of-done.md): a draft PR, a passing validation, and local paths to the demo media.
+The ticket is done when the validator returns PASS on the final diff and the worker has finished the brief's Finish step: a draft PR, plus local paths to the demo media.
 
 ## What is fixed and what is discovered
 
@@ -31,7 +31,6 @@ The output is a ticket that meets the [Definition of Done](references/definition
 | Default branch | `gh repo view --json defaultBranchRef -q .defaultBranchRef.name` |
 | Checks (test, lint, typecheck, format) | The repo's CLAUDE.md / AGENTS.md / CONTRIBUTING, then the task runner (`package.json` scripts, Makefile, justfile, nx, etc.) |
 | Demo tooling | The repo's own demo skill if it has one (it knows the test accounts and data rules), else the global `record-video` skill (`avr` on PATH), else skip. Only for user-visible changes. Always in unattended mode |
-| Local-run caveats | The repo's docs and the user's memory (for example, shared databases or containers that must not be started twice) |
 
 ## Per-ticket workspace
 
@@ -50,10 +49,9 @@ Everything outside the repo for a ticket lives in one folder:
 2. **Pick the base.** Use `--base` if given. Otherwise:
    - **Stacked ticket** (its first line says "Stack n/m"): base on the branch of the ticket at position n−1. For position 1, use `origin/<default branch>`. If ticket n−1's branch doesn't exist yet, stop and say to work the stack from the bottom up. Take the base from the stack position, not from "blocked by" links, which record real dependencies rather than order.
    - **Standalone ticket:** `origin/<default branch>`.
-3. **Discover the project specifics** from the table above. Put the check commands and caveats in the brief, so the worker doesn't have to rediscover them.
+3. **Discover the project specifics** from the table above. Put the check commands in the brief; the validator gets the same list.
 4. **Create the worktree:** `herdr worktree create --cwd <repo> --branch <branch> --base <base> --label "<ticket-id> <title>" --no-focus`. Read the workspace and pane IDs from the JSON response; never guess them. For any other herdr command, check `herdr <group>` for syntax first.
 
-   **Stacked ticket and `gh stack` installed** (`gh extension list`): register the branch in the stack now, so `open-pr` publishes it as part of the stack. For the bottom ticket, or when the lower branches aren't in a stack yet, adopt them all bottom to top: `gh stack init <branch 1> … <this branch>`. If a stack already holds the branches below, extend it with this branch instead; check `gh stack add --help` for how, rather than guessing. Confirm with `gh stack view`. Without `gh stack`, the PR still targets the branch below.
 5. **Start the worker:** `herdr agent start <ticket-id-lowercase> --kind claude --pane <root pane>`. Write `brief.md` from [worker-brief.md](references/worker-brief.md), then send `herdr agent prompt <name> "Read <path>/brief.md and follow it."`.
 6. **Wait for the worker.** Run `herdr agent wait <name>` in the background (Bash `run_in_background`) so you're notified when it's done. Then read the last lines of the pane and `report.md`:
    - `WORK-WORK: DONE` → go to step 7.
@@ -61,7 +59,7 @@ Everything outside the repo for a ticket lives in one folder:
    - **Idle with no marker, or blocked on a permission prompt** → read the pane, tell the user what it's waiting on, and don't answer approval dialogs for them.
 7. **Validate.** Start the `ticket-validator` agent with the full ticket text, the worktree path, the base ref and the check commands. Give it nothing the worker wrote: no report, no summary.
 8. **Fix loop.** On FAIL, send the validator's gap list to the worker and go back to step 6. After **2** failed rounds, stop: notify the user with the remaining gaps and leave the worker running.
-9. **Finish.** On PASS, prompt the worker with the "Finish" section of the brief: commit, push, open a draft PR, record demo media.
+9. **Finish.** On PASS, prompt the worker with the "Finish" section of the brief: open the draft PR, record demo media.
 10. **Report.** Send a herdr notification (`--sound done`). Then reply with:
     - the PR link;
     - the validator's verdict table;

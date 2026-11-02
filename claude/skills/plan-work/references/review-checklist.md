@@ -28,15 +28,12 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
 
 ## Traps seen before
 
-- A new auth collection or service account silently passes existing `Boolean(user)`-style staff checks.
-- An audit hook stamps a machine user's id into a relation that only points to human users.
-- A "hidden" admin collection hides the only UI that can create its API key.
 - A rule written as "reject when X" passes a request that simply omits the field; write "allow only when Y".
-- A framework runs access checks before it applies defaults (e.g. draft status), so the check sees raw input.
-- Copying the access rules of a public collection (legal pages) into one that should be private.
+- A new service account or token silently passes existing `Boolean(user)`-style "is staff" checks.
 - A client-only route guard in front of server-rendered data.
+- A framework runs access checks before it applies defaults, so the check sees raw input.
 - A CI job without a package install, so a script with imports fails at runtime.
 - "Blocked by" links copied from the stack order instead of real dependencies.
-- A "min items" rule that the framework skips unless the field is also marked required.
-- Validation that runs only on publish, not on draft saves, so a machine writer's bad data goes unnoticed until a human publishes.
-- A "done when" that names a test style the repo can't run (e.g. importing a config that only loads under the framework CLI). Check how existing tests reach that code.
+- A "done when" that names a test style the repo can't run. Check how existing tests reach that code.
+
+Project-specific traps belong in that project's own rules (e.g. `.claude/rules/`), not here.
