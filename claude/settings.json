@@ -10,17 +10,7 @@
     "command": "bash \"$HOME/.claude/statusline-command.sh\""
   },
   "enabledPlugins": {
-    "figma@claude-plugins-official": true,
-    "cloudflare@cloudflare": true,
-    "posthog@anthropic-plugin-directory": true
-  },
-  "extraKnownMarketplaces": {
-    "cloudflare": {
-      "source": {
-        "source": "github",
-        "repo": "cloudflare/skills"
-      }
-    }
+    "figma@claude-plugins-official": true
   },
   "voice": {
     "enabled": true,
