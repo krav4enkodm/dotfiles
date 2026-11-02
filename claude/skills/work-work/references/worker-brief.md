@@ -34,7 +34,7 @@ If something needs a decision the ticket and code don't answer, don't guess. Wri
 
 ## Finish (only when the coordinator tells you validation passed)
 
-1. Push the branch and open a **draft** PR against `<base>`. Use the `open-pr` skill in **pre-approved mode**: the user has pre-approved publishing as a draft, so don't stop to ask for confirmation. If `<base>` is a branch in a `gh stack`, `open-pr` publishes through the stack. Put the validator's verdict table in the description's testing section. If the repo's template has no section like that, add it at the end under a "Validation" heading.
+1. Push the branch and open a **draft** PR against `<base>`. Use the `open-pr` skill in **pre-approved mode**: the user has pre-approved publishing as a draft, so don't stop to ask for confirmation. If `<base>` is a branch in a `gh stack`, `open-pr` publishes through the stack. Put the validator's verdict table in the description's testing section. If the repo's template has no section like that, add it at the end under a "Validation" heading. List the ticket's Setup checklist (secrets, infra, flags, backfills) in the notes section as still to do.
 2. If the change is user-visible, record demo media with <demo tooling>, using seeded or synthetic test data only. Save it to `<workspace>/media/` and never commit it.
 3. Append the PR link and the media paths to `report.md`, then end your turn with `WORK-WORK: DONE`.
 ```

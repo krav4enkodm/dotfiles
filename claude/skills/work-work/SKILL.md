@@ -27,7 +27,7 @@ The output is a ticket that meets the [Definition of Done](references/definition
 | Concept | How to find it |
 |---|---|
 | Ticket | [trackers.md](../plan-work/references/trackers.md): a repo ticket skill, then a connected tracker tool (Linear, Jira, GitHub Issues…), then a markdown file path |
-| Branch name | The tracker's generated branch name if it has one, else `<ticket-id>-<slug>` |
+| Branch name | The "Branch name" row for the ticket's tracker in [trackers.md](../plan-work/references/trackers.md) |
 | Default branch | `gh repo view --json defaultBranchRef -q .defaultBranchRef.name` |
 | Checks (test, lint, typecheck, format) | The repo's CLAUDE.md / AGENTS.md / CONTRIBUTING, then the task runner (`package.json` scripts, Makefile, justfile, nx, etc.) |
 | Demo tooling | The repo's own demo skill if it has one (it knows the test accounts and data rules), else the global `record-video` skill (`avr` on PATH), else skip. Only for user-visible changes. Always in unattended mode |
@@ -47,9 +47,13 @@ Everything outside the repo for a ticket lives in one folder:
 ## Steps
 
 1. **Load the ticket.** Fetch its full text. Check it against the Definition of Ready. If it's not ready, stop and name the missing parts.
-2. **Pick the base.** Use `--base` if given. Otherwise, if the ticket is blocked by another ticket whose branch exists, use that branch, so the PR stacks on it. Otherwise use `origin/<default branch>`.
+2. **Pick the base.** Use `--base` if given. Otherwise:
+   - **Stacked ticket** (its first line says "Stack n/m"): base on the branch of the ticket at position n−1. For position 1, use `origin/<default branch>`. If ticket n−1's branch doesn't exist yet, stop and say to work the stack from the bottom up. Take the base from the stack position, not from "blocked by" links, which record real dependencies rather than order.
+   - **Standalone ticket:** `origin/<default branch>`.
 3. **Discover the project specifics** from the table above. Put the check commands and caveats in the brief, so the worker doesn't have to rediscover them.
 4. **Create the worktree:** `herdr worktree create --cwd <repo> --branch <branch> --base <base> --label "<ticket-id> <title>" --no-focus`. Read the workspace and pane IDs from the JSON response; never guess them. For any other herdr command, check `herdr <group>` for syntax first.
+
+   **Stacked ticket and `gh stack` installed** (`gh extension list`): register the branch in the stack now, so `open-pr` publishes it as part of the stack. For the bottom ticket, or when the lower branches aren't in a stack yet, adopt them all bottom to top: `gh stack init <branch 1> … <this branch>`. If a stack already holds the branches below, extend it with this branch instead; check `gh stack add --help` for how, rather than guessing. Confirm with `gh stack view`. Without `gh stack`, the PR still targets the branch below.
 5. **Start the worker:** `herdr agent start <ticket-id-lowercase> --kind claude --pane <root pane>`. Write `brief.md` from [worker-brief.md](references/worker-brief.md), then send `herdr agent prompt <name> "Read <path>/brief.md and follow it."`.
 6. **Wait for the worker.** Run `herdr agent wait <name>` in the background (Bash `run_in_background`) so you're notified when it's done. Then read the last lines of the pane and `report.md`:
    - `WORK-WORK: DONE` → go to step 7.
