@@ -10,7 +10,7 @@ BACKUP_DIR="$CLAUDE_DIR/backups/install-$(date +%Y%m%d-%H%M%S)"
 info() { printf '  \033[32m%-8s\033[0m %s\n' "$1" "$2"; }
 warn() { printf '  \033[33m%-8s\033[0m %s\n' "$1" "$2"; }
 
-mkdir -p "$CLAUDE_DIR/skills"
+mkdir -p "$CLAUDE_DIR/skills" "$CLAUDE_DIR/agents"
 
 # link <source-in-repo> <target-in-~/.claude>
 link() {
@@ -41,6 +41,11 @@ link claude/statusline-command.sh  statusline-command.sh
 for skill in "$REPO"/claude/skills/*/; do
   name="$(basename "$skill")"
   link "claude/skills/$name" "skills/$name"
+done
+
+for agent in "$REPO"/claude/agents/*.md; do
+  name="$(basename "$agent")"
+  link "claude/agents/$name" "agents/$name"
 done
 
 # MCP servers live in ~/.claude.json alongside machine state, so merge rather
