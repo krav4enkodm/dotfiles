@@ -3,6 +3,8 @@
     "defaultMode": "auto"
   },
   "model": "opus[1m]",
+  "theme": "dark",
+  "tui": "fullscreen",
   "statusLine": {
     "type": "command",
     "command": "bash \"$HOME/.claude/statusline-command.sh\""
@@ -14,8 +16,7 @@
     "enabled": true,
     "mode": "hold"
   },
-  "agentPushNotifEnabled": true,
-  "skipAutoPermissionPrompt": true,
   "voiceEnabled": true,
-  "tui": "fullscreen"
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true
 }
