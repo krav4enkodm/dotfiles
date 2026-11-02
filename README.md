@@ -25,7 +25,7 @@ re-running it is safe.
 ### What the installer does
 
 1. **Checks prerequisites:** `git` and `jq` are required. It warns about `claude`,
-   `gh` (plus `gh auth` and `gh stack`), `herdr`, `npx` and `avr`.
+   `gh` (plus `gh auth`), `herdr`, `npx` and `avr`.
 2. **Copies files** (skills, agents, the status line script) into `~/.claude/`.
    It records what it installed in `~/.claude/.workbench-manifest`, so a skill
    deleted from the repo is removed on the next run. Skills it didn't install
@@ -33,8 +33,9 @@ re-running it is safe.
 3. **Merges settings** into the live files instead of replacing them. Repo keys
    win, and keys added locally by other tools (herdr's hook, `autoMode`, ...)
    are kept. Removing a key from the repo does not remove it on the machine.
-4. **Sets up integrations:** herdr's Claude integration, plugin marketplaces and
-   the enabled plugins, through `herdr integration` and `claude plugin`.
+4. **Sets up integrations:** herdr's Claude integration, the `gh stack` extension
+   (`github/gh-stack`), plugin marketplaces and the enabled plugins, through
+   `herdr integration`, `gh extension` and `claude plugin`.
 
 ## What's here
 

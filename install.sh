@@ -48,8 +48,6 @@ for cmd in claude gh herdr npx; do
 done
 if has gh; then
   gh auth status >/dev/null 2>&1 && ok "gh auth" || warn "gh not logged in — run: gh auth login"
-  gh extension list 2>/dev/null | grep -q 'gh-stack' && ok "gh stack" \
-    || warn "gh stack not installed (optional, for stacked PRs)"
 fi
 has avr && ok "avr" || warn "avr not found (optional, for demo videos)"
 
@@ -139,6 +137,17 @@ if has herdr; then
   fi
 else
   warn "herdr not found — skipping its Claude integration"
+fi
+
+if has gh; then
+  if gh extension list 2>/dev/null | grep -q 'gh-stack'; then
+    ok "gh stack"
+  else
+    act install "gh stack (github/gh-stack)"
+    [ "$CHECK" = 1 ] || gh extension install github/gh-stack || warn "failed: gh stack — run: gh extension install github/gh-stack"
+  fi
+else
+  warn "gh not found — skipping gh stack"
 fi
 
 if has claude; then
