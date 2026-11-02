@@ -9,7 +9,7 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
    - Does a new login method, token, API key, or service account change the meaning of existing "is logged in" / "is staff" checks?
    - Are new endpoints readable by anyone who shouldn't read them (public REST/GraphQL defaults)?
    - Is a client-side guard the only thing protecting server-rendered data?
-   - Can a machine account do more than it needs (publish, delete, other collections/tables)?
+   - Can a machine account do more than it needs (publish, delete, touch other resources)?
 3. **Data model vs real producers.** Compare fields with what actually produces the data: optional vs required, nulls, empty strings, fallback paths, values that don't exist yet (e.g. a date nobody provides).
 4. **Hooks and side effects.** Existing hooks that run on every write (audit fields, "last edited by", revalidation, webhooks): do they behave correctly for the new writer?
 5. **Idempotency.** Can it be re-run (retries, manual re-triggers) without duplicates or overwriting human edits?
@@ -29,7 +29,6 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
 ## Traps seen before
 
 - A rule written as "reject when X" passes a request that simply omits the field; write "allow only when Y".
-- A new service account or token silently passes existing `Boolean(user)`-style "is staff" checks.
 - A client-only route guard in front of server-rendered data.
 - A framework runs access checks before it applies defaults, so the check sees raw input.
 - A CI job without a package install, so a script with imports fails at runtime.
