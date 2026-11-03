@@ -49,20 +49,23 @@ re-running it is safe.
 
 ## Skills
 
-| Skill | What it does |
-|---|---|
-| `commit` | Commits following the conventions of whatever repo you're in, detected from its history. Title = what changed, body = why. |
-| `frontend-feature-layers` | Separates a data-backed frontend feature into data / services / presentational components / thin container. |
-| `plan-work` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase. Works with Linear, Jira, GitHub Issues or markdown files. |
-| `work-work` | Implements one ready ticket in its own herdr worktree with a separate Claude worker, checks it with an independent validator, and opens a draft PR. |
-| `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; handles `gh stack` stacks. |
+| Skill | What it does | Depends on |
+|---|---|---|
+| `commit` | Commits following the conventions of whatever repo you're in, detected from its history. Title = what changed, body = why. | — |
+| `frontend-feature-layers` | Separates a data-backed frontend feature into data / services / presentational components / thin container. | — |
+| `plan-work` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase. Works with Linear, Jira, GitHub Issues or markdown files. | `readiness-reviewer` agent |
+| `work-work` | Implements one ready ticket in its own herdr worktree with a separate Claude worker, checks it with an independent validator, and opens a draft PR. | `plan-work` (`definition-of-ready.md`, `trackers.md`), `ticket-validator` agent, herdr |
+| `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; handles `gh stack` stacks. | `gh stack` (optional) |
 
 ## Agents
 
-| Agent | Used by | What it does |
-|---|---|---|
-| `readiness-reviewer` | `plan-work` | Checks a ticket's claims against the code and returns gaps and questions. |
-| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket and the diff; returns PASS or FAIL with a gap list. |
+| Agent | Used by | What it does | Depends on |
+|---|---|---|---|
+| `readiness-reviewer` | `plan-work` | Checks a ticket's claims against the code and returns gaps and questions. | `plan-work` (`review-checklist.md`, `definition-of-ready.md`), Figma plugin |
+| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket and the diff; returns PASS or FAIL with a gap list. | Figma plugin |
+
+`plan-work/references/` is shared: renaming or moving a file there breaks the
+skills and agents listed above.
 
 ## Plan → work workflow
 
