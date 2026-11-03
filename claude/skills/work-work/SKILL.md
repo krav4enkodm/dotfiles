@@ -2,6 +2,7 @@
 name: work-work
 description: Implement one ready ticket end to end in its own herdr worktree. Starts a separate Claude worker there (own context window), validates the result against the ticket with an independent validator subagent, sends gaps back for fixing, then has the worker open a draft PR and record demo media. Use when the user asks to work on, implement, or ship a ticket that is ready (usually one produced by plan-work). Not for planning or for tickets that aren't ready.
 argument-hint: "<ticket id or path to ticket file> [--base <branch>]"
+disable-model-invocation: true
 ---
 
 # Work a ticket to a draft PR
@@ -60,6 +61,7 @@ Everything outside the repo for a ticket lives in one folder:
    - `WORK-WORK: BLOCKED` → show the user the question exactly as written, with a herdr notification (`--sound request`). Send the user's answer back to the worker and wait again.
    - **Idle with no marker, or blocked on a permission prompt** → read the pane, tell the user what it's waiting on, and don't answer approval dialogs for them.
 7. **Validate.** Start the `ticket-validator` agent with the full ticket text, the worktree path, the base ref and the check commands, plus the design tool and file key for a UI ticket. Give it nothing the worker wrote: no report, no summary, no design table. It pulls the design itself.
+   Record `git -C <worktree> rev-parse HEAD` and `git -C <worktree> status --porcelain --untracked-files=no` before it starts, and compare them after it returns. If either changed, the validator touched the worktree: discard its verdict and tell the user.
 8. **Fix loop.** On FAIL, send the validator's gap list to the worker and go back to step 6. After **2** failed rounds, stop: notify the user with the remaining gaps and leave the worker running.
 9. **Finish.** On PASS, prompt the worker with the "Finish" section of the brief: open the draft PR, record demo media.
 10. **Report.** Send a herdr notification (`--sound done`). Then reply with:

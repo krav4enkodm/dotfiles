@@ -6,6 +6,8 @@
 #
 # The repo is the source of truth. Files are copied, not linked; settings are
 # merged so keys other tools add locally (herdr's hook, autoMode, ...) survive.
+# Arrays are replaced, so a PreToolUse hook added only on this machine is
+# overwritten by the repo's list.
 # Anything replaced or removed is backed up to ~/.claude/backups/install-<ts>/.
 set -euo pipefail
 
@@ -54,11 +56,14 @@ has avr && ok "avr" || warn "avr not found (optional, for demo videos)"
 # ------------------------------------------------------------------------ files
 echo
 echo "Files -> ${CLAUDE_DIR/#$HOME/\~}"
-[ "$CHECK" = 1 ] || mkdir -p "$CLAUDE_DIR/skills" "$CLAUDE_DIR/agents"
+[ "$CHECK" = 1 ] || mkdir -p "$CLAUDE_DIR/skills" "$CLAUDE_DIR/agents" "$CLAUDE_DIR/rules" "$CLAUDE_DIR/hooks"
 
 managed=(CLAUDE.md statusline-command.sh)
 for d in "$SRC"/skills/*/; do managed+=("skills/$(basename "$d")"); done
 for f in "$SRC"/agents/*.md; do managed+=("agents/$(basename "$f")"); done
+for f in "$SRC"/rules/*.md; do managed+=("rules/$(basename "$f")"); done
+# One file at a time: herdr keeps its own hook script in the same folder.
+for f in "$SRC"/hooks/*.sh; do managed+=("hooks/$(basename "$f")"); done
 
 for item in "${managed[@]}"; do
   src="$SRC/$item" dest="$CLAUDE_DIR/$item"

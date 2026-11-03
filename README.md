@@ -27,9 +27,11 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 |---|---|---|
 | `claude/CLAUDE.md` | `~/.claude/CLAUDE.md` | copied; personal defaults for every project |
 | `claude/skills/*` | `~/.claude/skills/*` | copied |
+| `claude/rules/*.md` | `~/.claude/rules/*.md` | copied; load when Claude touches matching files |
+| `claude/hooks/*.sh` | `~/.claude/hooks/*.sh` | copied, one file at a time; herdr's own hook there is left alone |
 | `claude/agents/*.md` | `~/.claude/agents/*.md` | copied |
 | `claude/statusline-command.sh` | `~/.claude/statusline-command.sh` | copied; dir / branch / model / context remaining |
-| `claude/settings.json` | `~/.claude/settings.json` | merged; model, permissions, status line, plugins |
+| `claude/settings.json` | `~/.claude/settings.json` | merged; model, permissions and deny rules, hooks, status line, plugins |
 | `claude/settings-removed.json` | `~/.claude/settings.json` | keys (dotted paths) deleted after the merge |
 | `claude/mcp-servers.json` | `~/.claude.json` → `mcpServers` | merged |
 
@@ -38,17 +40,36 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | Skill | What it does | Depends on |
 |---|---|---|
 | `commit` | Commits following the conventions of whatever repo you're in, detected from its history. Title = what changed, body = why. | — |
-| `frontend-feature-layers` | Separates a data-backed frontend feature into data / services / presentational components / thin container. | — |
 | `plan-work` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase. Works with Linear, Jira, GitHub Issues or markdown files. | `readiness-reviewer` agent |
-| `work-work` | Implements one ready ticket in its own herdr worktree with a separate Claude worker, checks it with an independent validator, and opens a draft PR. | `plan-work` (`definition-of-ready.md`, `trackers.md`), `ticket-validator` agent, herdr |
+| `work-work` | Runs only as `/work-work`. Implements one ready ticket in its own herdr worktree with a separate Claude worker, checks it with an independent validator, and opens a draft PR. | `plan-work` (`definition-of-ready.md`, `trackers.md`), `ticket-validator` agent, herdr |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; handles `gh stack` stacks. | `gh stack` (optional) |
 
 ## Agents
 
 | Agent | Used by | What it does | Depends on |
 |---|---|---|---|
-| `readiness-reviewer` | `plan-work` | Checks a ticket's claims against the code and returns gaps and questions. | `plan-work` (`review-checklist.md`, `definition-of-ready.md`), Figma plugin |
-| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket and the diff; returns PASS or FAIL with a gap list. | Figma plugin |
+| `readiness-reviewer` | `plan-work` | Checks a ticket's claims against the code and returns gaps and questions. | `plan-work` (`review-checklist.md`, `definition-of-ready.md`), `bash-guard.sh` hook, Figma plugin |
+| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket and the diff; returns PASS or FAIL with a gap list. | `bash-guard.sh` hook, Figma plugin |
+
+## Rules
+
+| Rule | Loads for | What it says |
+|---|---|---|
+| `frontend-feature-layers` | `*.tsx`, `*.jsx` | Lay out a data-backed React feature as data / services / presentational components / thin container. |
+
+## Guardrails
+
+Things that must never happen are enforced, not just written down. They match
+the usual form of a command, so treat them as guardrails, not a sandbox.
+
+- **Deny rules** in `settings.json`: no `gh pr merge`, `gh pr ready`,
+  `gh stack merge`, `gh stack unstack`, or `gh stack submit --open`. Run those
+  yourself.
+- **`hooks/bash-guard.sh session`**, on every Bash call: no `git commit` on the
+  default branch, and `gh pr create` needs `--draft`.
+- **`bash-guard.sh reviewer` / `validator`**, in the agents' frontmatter: the
+  readiness reviewer runs read-only commands only; the validator can run the
+  repo's checks but can't change git state or call `gh`.
 
 `plan-work/references/` is shared: renaming or moving a file there breaks the
 skills and agents listed above.
