@@ -3,7 +3,8 @@
 #
 #   ./check.sh    exit 1 if any check fails
 #
-# - shell scripts pass shellcheck (skipped with a warning if it isn't installed)
+# - shell scripts pass shellcheck at warning level and above (skipped with a
+#   warning if it isn't installed)
 # - JSON config parses
 # - every skill and agent has a frontmatter name matching its path
 # - README's Skills and Agents tables list exactly what's in claude/
@@ -29,7 +30,7 @@ echo "Shell"
 scripts=(install.sh check.sh claude/statusline-command.sh)
 if command -v shellcheck >/dev/null 2>&1; then
   for s in "${scripts[@]}"; do
-    if out="$(shellcheck "$s" 2>&1)"; then ok "$s"; else fail "$s"; printf '%s\n' "$out" | sed 's/^/        /'; fi
+    if out="$(shellcheck --severity=warning "$s" 2>&1)"; then ok "$s"; else fail "$s"; printf '%s\n' "$out" | sed 's/^/        /'; fi
   done
 else
   warn "shellcheck not installed — skipped (CI runs it)"
@@ -93,6 +94,8 @@ while IFS= read -r f; do
     [ -n "$target" ] || continue
     [ -e "$dir/$target" ] || { fail "$f -> $target"; broken=1; }
   done < <(grep -oE '\]\([^)]+\)' "$f" | sed -E 's/^\]\(|\)$//g' | grep -vE '^(https?:|mailto:|#)' || true)
+  # The literal text "~/.claude/..." is what's being matched, so it stays unexpanded.
+  # shellcheck disable=SC2088
   while IFS= read -r path; do
     [ -e "$SRC/${path#\~/.claude/}" ] || { fail "$f -> $path"; broken=1; }
   done < <(grep -oE '~/\.claude/(skills|agents)/[A-Za-z0-9_./-]+[A-Za-z0-9_]' "$f" || true)

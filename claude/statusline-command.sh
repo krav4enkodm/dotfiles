@@ -19,9 +19,6 @@ if git -C "$cwd" rev-parse --git-dir > /dev/null 2>&1; then
     || git -C "$cwd" -c core.fsmonitor=false rev-parse --short HEAD 2>/dev/null)
 fi
 
-# Build the status line
-line=""
-
 # Directory segment
 printf '\033[34m%s\033[0m' "$short_cwd"
 
