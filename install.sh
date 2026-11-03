@@ -56,7 +56,7 @@ echo
 echo "Files -> ${CLAUDE_DIR/#$HOME/\~}"
 [ "$CHECK" = 1 ] || mkdir -p "$CLAUDE_DIR/skills" "$CLAUDE_DIR/agents"
 
-managed=(statusline-command.sh)
+managed=(CLAUDE.md statusline-command.sh)
 for d in "$SRC"/skills/*/; do managed+=("skills/$(basename "$d")"); done
 for f in "$SRC"/agents/*.md; do managed+=("agents/$(basename "$f")"); done
 
@@ -92,7 +92,8 @@ fi
 
 # --------------------------------------------------------------------- settings
 # Repo keys win; keys only present locally are kept. Objects merge deeply,
-# arrays are replaced. Removing a key from the repo does not remove it locally.
+# arrays are replaced. Removing a key from the repo does not remove it locally:
+# list it (dotted path, e.g. "voice.mode") in settings-removed.json for that.
 echo
 echo "Settings"
 merge_json() { # merge_json <target-file> <label> <jq-filter> [jq args...]
@@ -120,8 +121,9 @@ merge_json() { # merge_json <target-file> <label> <jq-filter> [jq args...]
   chmod 600 "$target" 2>/dev/null || true
 }
 
-merge_json "$CLAUDE_DIR/settings.json" "settings.json" '. * $repo[0]' \
-  --slurpfile repo "$SRC/settings.json"
+merge_json "$CLAUDE_DIR/settings.json" "settings.json" \
+  'reduce ($rm[0][] | split(".")) as $p (. * $repo[0]; delpaths([$p]))' \
+  --slurpfile repo "$SRC/settings.json" --slurpfile rm "$SRC/settings-removed.json"
 merge_json "$CLAUDE_JSON" "mcpServers -> ${CLAUDE_JSON/#$HOME/\~}" \
   '.mcpServers = ((.mcpServers // {}) + $add[0])' --slurpfile add "$SRC/mcp-servers.json"
 

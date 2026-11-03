@@ -26,5 +26,6 @@ docs/decisions.md for how the installer works and what is deliberately left out.
 - Branch off `main` and open a draft PR. Don't commit to `main` directly.
 - Commit titles are plain imperative ("Install the gh stack extension from the
   installer"); the body explains why.
-- This machine has no global git identity. Commit with
-  `git -c user.name="Dmitry Kravchenko" -c user.email="krav4enkodm@gmail.com" commit ...`.
+- This machine has no global git identity; each clone sets its own. On a fresh
+  clone run `git config user.name "Dmitry Kravchenko"` and
+  `git config user.email krav4enkodm@gmail.com` once.

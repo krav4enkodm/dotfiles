@@ -5,7 +5,7 @@
 #
 # - shell scripts pass shellcheck at warning level and above (skipped with a
 #   warning if it isn't installed)
-# - JSON config parses
+# - JSON config parses, and settings-removed.json doesn't list a key settings.json sets
 # - every skill and agent has a frontmatter name matching its path
 # - README's Skills and Agents tables list exactly what's in claude/
 # - links and ~/.claude/... paths inside claude/ point at files that exist
@@ -42,6 +42,11 @@ echo "JSON"
 for f in claude/*.json; do
   if jq empty "$f" 2>/dev/null; then ok "$f"; else fail "$f does not parse"; fi
 done
+# A key can't be both installed and removed.
+while IFS= read -r key; do
+  fail "settings-removed.json lists '$key', which settings.json still sets"
+done < <(jq -r --slurpfile s claude/settings.json \
+  '.[] | select(split(".") as $p | $s[0] | getpath($p) != null)' claude/settings-removed.json 2>/dev/null || true)
 
 # ----------------------------------------------------------- skills and agents
 echo

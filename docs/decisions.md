@@ -14,14 +14,17 @@ those edits, and the next `./install.sh` overwrites them after backing them up.
 
 1. **Checks prerequisites.** `git` and `jq` are required. It warns about `claude`,
    `gh` (plus `gh auth`), `herdr`, `npx` and `avr`.
-2. **Copies files** (skills, agents, the status line script) into `~/.claude/`.
+2. **Copies files** (the global CLAUDE.md, skills, agents, the status line script) into `~/.claude/`.
    It records what it installed in `~/.claude/.workbench-manifest`, so a skill
    deleted from the repo is removed on the next run. Skills it didn't install
    are left alone.
 3. **Merges settings** into the live files instead of replacing them. Repo keys
    win, and keys added locally by other tools (herdr's hook, `autoMode`, ...)
    are kept. Objects merge deeply, arrays are replaced. Removing a key from the
-   repo does not remove it on the machine.
+   repo does not remove it on the machine; to retire a key everywhere, also list
+   it in `settings-removed.json`, which the installer deletes after the merge.
+   Each machine may keep its own additions (extra plugins, MCP servers), so
+   `--check` only reports where the machine differs from what the repo sets.
 4. **Sets up integrations:** herdr's Claude integration, the `gh stack` extension
    (`github/gh-stack`), plugin marketplaces and the enabled plugins, through
    `herdr integration`, `gh extension` and `claude plugin`.
