@@ -1,7 +1,8 @@
 # workbench
 
 My portable Claude Code setup. `claude/` mirrors `~/.claude/`, and `install.sh`
-copies and merges it onto the machine. See README.md for the file map.
+copies and merges it onto the machine. See README.md for the file map and
+docs/decisions.md for how the installer works and what is deliberately left out.
 
 ## Rules
 
