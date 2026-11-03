@@ -14,7 +14,7 @@ those edits, and the next `./install.sh` overwrites them after backing them up.
 
 1. **Checks prerequisites.** `git` and `jq` are required. It warns about `claude`,
    `gh` (plus `gh auth`), `herdr`, `npx` and `avr`.
-2. **Copies files** (the global CLAUDE.md, skills, agents, the status line script) into `~/.claude/`.
+2. **Copies files** (the global CLAUDE.md, skills, agents, rules, hooks, the status line script) into `~/.claude/`.
    It records what it installed in `~/.claude/.workbench-manifest`, so a skill
    deleted from the repo is removed on the next run. Skills it didn't install
    are left alone.
@@ -29,8 +29,34 @@ those edits, and the next `./install.sh` overwrites them after backing them up.
    (`github/gh-stack`), plugin marketplaces and the enabled plugins, through
    `herdr integration`, `gh extension` and `claude plugin`.
 
+Hook scripts are managed one file at a time, because herdr keeps its own
+script in `~/.claude/hooks/`. In settings, `hooks.PreToolUse` is an array, so
+the repo's list replaces any `PreToolUse` entry added only on the machine;
+`SessionStart` and other events merge as separate keys.
+
 Anything it replaces or removes goes to `~/.claude/backups/install-<timestamp>/`.
 Re-running it is safe.
+
+## Which Claude Code feature holds what
+
+- **CLAUDE.md** holds rules for every session; **`rules/`** holds conventions
+  for particular files, scoped with `paths:` so they load only when Claude
+  touches matching files. `frontend-feature-layers` was a skill and is now a rule:
+  it's a convention, and a skill applies only when the model decides to load it.
+- **Skills** hold procedures. A skill with side effects that should never start
+  on its own (`work-work`) sets `disable-model-invocation: true`. `commit` and
+  `open-pr` stay model-invocable because `work-work`'s workers call them
+  through the Skill tool.
+- **Deny rules and hooks** hold anything that must never happen. Prose in
+  CLAUDE.md is a request; it stays there so Claude plans around the rule, but
+  the hook is what enforces it. Deny rules cover fixed commands; the hook
+  covers rules that depend on state or flags (the current branch, `--draft`).
+- **Agents' read-only promise** is a frontmatter hook, because nothing else
+  works here: `permissionMode` is overridden in auto mode, and
+  `disallowedTools: Bash(...)` removes Bash entirely.
+
+This is also why the workbench isn't a plugin: plugin subagents ignore
+`hooks`, `permissionMode` and `mcpServers` in their frontmatter.
 
 ## What is deliberately not here
 

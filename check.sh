@@ -6,8 +6,9 @@
 # - shell scripts pass shellcheck at warning level and above (skipped with a
 #   warning if it isn't installed)
 # - JSON config parses, and settings-removed.json doesn't list a key settings.json sets
-# - every skill and agent has a frontmatter name matching its path
-# - README's Skills and Agents tables list exactly what's in claude/
+# - every skill and agent has a frontmatter name matching its path, every rule
+#   has a paths: list, and every hook script is executable
+# - README's Skills, Agents and Rules tables list exactly what's in claude/
 # - links and ~/.claude/... paths inside claude/ point at files that exist
 set -euo pipefail
 
@@ -27,7 +28,8 @@ frontmatter_name() { # frontmatter_name <file>: the name: field of its YAML fron
 
 # ------------------------------------------------------------------ shellcheck
 echo "Shell"
-scripts=(install.sh check.sh claude/statusline-command.sh)
+scripts=()
+while IFS= read -r s; do scripts+=("$s"); done < <(find . -name '*.sh' -not -path './.git/*' | sed 's|^\./||' | sort)
 if command -v shellcheck >/dev/null 2>&1; then
   for s in "${scripts[@]}"; do
     if out="$(shellcheck --severity=warning "$s" 2>&1)"; then ok "$s"; else fail "$s"; printf '%s\n' "$out" | sed 's/^/        /'; fi
@@ -50,7 +52,7 @@ done < <(jq -r --slurpfile s claude/settings.json \
 
 # ----------------------------------------------------------- skills and agents
 echo
-echo "Skills and agents"
+echo "Skills, agents, rules and hooks"
 skills=() agents=()
 for d in "$SRC"/skills/*/; do
   name="$(basename "$d")"; skills+=("$name")
@@ -67,6 +69,22 @@ done
 
 # ---------------------------------------------------------------------- readme
 # Rows look like: | `name` | ... — taken from the "## Skills" / "## Agents" sections.
+rules=()
+for f in "$SRC"/rules/*.md; do
+  [ -e "$f" ] || continue
+  name="$(basename "$f" .md)"; rules+=("$name")
+  # Rules are only worth having path-scoped; an unscoped one belongs in CLAUDE.md.
+  if awk 'NR==1 && $0!="---" {exit 1} NR>1 && $0=="---" {exit 1} NR>1 && /^paths:/ {found=1; exit 0} END {exit !found}' "$f"; then
+    ok "rules/$name"
+  else
+    fail "rules/$name.md has no paths: frontmatter"
+  fi
+done
+for f in "$SRC"/hooks/*.sh; do
+  [ -e "$f" ] || continue
+  [ -x "$f" ] && ok "hooks/$(basename "$f")" || fail "hooks/$(basename "$f") is not executable"
+done
+
 echo
 echo "README tables"
 readme_rows() { # readme_rows <section heading>
@@ -85,6 +103,7 @@ compare() { # compare <label> <section> <names...>
 }
 compare skills Skills "${skills[@]}"
 compare agents Agents "${agents[@]}"
+compare rules Rules "${rules[@]}"
 
 # ----------------------------------------------------------------------- links
 # Relative markdown links resolve from the file's own directory; ~/.claude/...

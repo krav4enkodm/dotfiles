@@ -48,4 +48,4 @@ Use the checks in [references/review-checklist.md](references/review-checklist.m
 
 ## Done
 
-Every ticket meets the Definition of Ready, the last review found no blockers or gaps, and the user has the links. Offer to start the first piece with the `work-work` skill, bottom of the stack first; don't start implementing unasked.
+Every ticket meets the Definition of Ready, the last review found no blockers or gaps, and the user has the links. Suggest starting the first piece with `/work-work <ticket id>`, bottom of the stack first. `work-work` only runs when the user types it, so don't try to invoke it, and don't start implementing unasked.
