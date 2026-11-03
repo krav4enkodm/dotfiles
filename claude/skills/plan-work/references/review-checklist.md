@@ -18,6 +18,12 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
 8. **Verification path.** Can the stated "done when" actually be checked in the stated environment? Some flows only run in production.
 9. **Library behaviour.** For every framework behaviour the ticket relies on (ordering, defaults, headers, query params), check the installed source and version.
 10. **Clarity.** Could someone new implement it without asking? Ambiguous verbs ("handle", "support"), unnamed files, two tickets that both seem to own a part.
+11. **Design (UI tickets).** Pull every node in the Design section with the design tool (for Figma: `get_design_context`, `get_variable_defs`, `get_screenshot`).
+    - Every element the Scope adds or changes has a node, and every node exists and shows that element.
+    - A node drawn in a non-resting state (the context reports `active`, `hover`, `selected`, `open`, or a variant name says so) is a **question** unless the ticket already says what the element looks like at rest.
+    - Elements on screen today that the mockup omits are a **question** unless the ticket says whether they stay.
+    - For each element, find the design-system component and the prop that produces each design variable (size, variant, typography). A component whose default differs from the design (font size, title case, margins between siblings) gets the prop named in the ticket; check the default in the installed source.
+    - The section copies no values; if it does, replace them with the node ID.
 
 ## Cross-ticket
 
@@ -34,5 +40,8 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
 - A CI job without a package install, so a script with imports fails at runtime.
 - "Blocked by" links copied from the stack order instead of real dependencies.
 - A "done when" that names a test style the repo can't run. Check how existing tests reach that code.
+- A design check scoped to one property ("colours match"), so a wrong font size or spacing passes every review. The check covers every variable the node defines.
+- A mockup frame that draws a hover or active state, built as the resting look.
+- A design-system component's default (font size, title case, sibling margin) that silently differs from the design.
 
 Project-specific traps belong in that project's own rules (e.g. `.claude/rules/`), not here.
