@@ -11,7 +11,8 @@ git clone https://github.com/krav4enkodm/workbench ~/Projects/workbench
 
 ## Day-to-day loop
 
-1. Change things **in the repo**, then run `./install.sh`.
+1. Change things **in the repo**, run `./check.sh`, then `./install.sh`. CI runs
+   the same check on every PR.
 2. If you tweaked something live (a skill, a setting), `./install.sh --check`
    shows the drift as a diff. Copy what you want to keep into the repo, commit,
    then run `./install.sh` so the machine matches the repo again.

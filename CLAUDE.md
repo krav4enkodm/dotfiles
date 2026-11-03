@@ -17,6 +17,9 @@ docs/decisions.md for how the installer works and what is deliberately left out.
   every reference (`grep -rn 'plan-work/' claude/`) and the "Depends on" columns
   in README.md.
 - **Keep README.md in step** when adding, removing or renaming a skill or agent.
+- **Run `./check.sh` before committing.** It runs shellcheck, validates the JSON,
+  matches the README tables against `claude/` and checks that links resolve.
+  CI runs it on every PR.
 
 ## Git
 
