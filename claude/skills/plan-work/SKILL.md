@@ -28,7 +28,7 @@ State the size in one line, then proceed. Re-size if the work grows.
 
 ## Steps
 
-1. **Understand and ground.** Restate the goal in one or two sentences. Find what already exists: code that produces or consumes the data, similar features to copy, auth/access patterns, deploy and CI flow, environments.
+1. **Understand and ground.** Restate the goal in one or two sentences. Find what already exists: code that produces or consumes the data, similar features to copy, auth/access patterns, deploy and CI flow, environments. For UI work, open the design too: pull each mockup node's structure, variables and screenshot, map every element to its node ID and to the design-system component that will render it, and note frames that draw a non-resting state (hover, active, open) and existing elements the mockup leaves out. These become the ticket's Design section and its questions.
 2. **Approach.** Give options with a recommendation and the trade-offs that matter (security, cost, blast radius, effort). For a task, one paragraph is enough.
 3. **Split into pieces** (feature/project). Each piece must be safe to ship on its own. Put a change that widens access or trust in the same piece as the thing that needs it, never after. Note which pieces can be verified where.
 4. **Delivery shape** (feature/project). Ask about team size if unknown. Choose a stack or parallel tracks; order by real dependencies; put pieces that need ops setup or production-only verification last. For a stack, write the position into each ticket's first line ("Stack 2/5"); `work-work` and `open-pr` take care of branches and `gh stack`.
