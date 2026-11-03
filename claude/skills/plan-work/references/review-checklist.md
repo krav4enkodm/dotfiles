@@ -25,6 +25,8 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
     - For each element, find the design-system component and the prop that produces each design variable (size, variant, typography). A component whose default differs from the design (font size, title case, margins between siblings) gets the prop named in the ticket; check the default in the installed source.
     - The section copies no values; if it does, replace them with the node ID.
 
+12. **Bug (bug tickets).** The steps reproduce it on the current code, or the failing path is found in the code. The root cause is named, or is a question. The regression test can reach that path the way the repo's existing tests do.
+
 ## Cross-ticket
 
 1. **Contracts between tickets.** What one ticket sends/stores vs what another accepts/reads: names, formats, required fields, status values.

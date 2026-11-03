@@ -49,7 +49,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | Agent | Used by | What it does | Depends on |
 |---|---|---|---|
 | `readiness-reviewer` | `plan-work` | Checks a ticket's claims against the code and returns gaps and questions. | `plan-work` (`review-checklist.md`, `definition-of-ready.md`), `bash-guard.sh` hook, Figma plugin |
-| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket and the diff; returns PASS or FAIL with a gap list. | `bash-guard.sh` hook, Figma plugin |
+| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket, the diff and the running app; returns PASS or FAIL with a gap list. | `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP (UI tickets) |
 
 ## Rules
 
@@ -77,14 +77,16 @@ skills and agents listed above.
 ## Plan → work workflow
 
 ```
-/plan-work  →  tickets that meet the Definition of Ready
-/work-work  →  per ticket: herdr worktree → worker Claude → validator → draft PR + demo media
+/plan-work  →  drafts → readiness review (max 3 rounds) → tickets created in the tracker
+/work-work  →  per ticket: ticket.md → herdr worktree → worker Claude → validator → draft PR + demo media
 you         →  review the draft PR; iterate in the worker pane or via PR comments
 ```
 
 Fixed assumptions: Claude Code, [herdr](https://herdr.dev) (`work-work` runs inside it),
 and GitHub with the `gh` CLI (`gh stack` optional). The tracker, check commands and
-demo tooling are discovered per project. For demo videos `work-work` uses the
+demo tooling are discovered per project. Decisions made while a ticket is worked
+go into its `ticket.md` first and are written back to the tracker, so the
+validator always checks against the current contract. For demo videos `work-work` uses the
 project's own demo skill, or the `record-video` skill from
 agent-video-recorder if `avr` is installed.
 

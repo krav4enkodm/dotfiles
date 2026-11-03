@@ -10,7 +10,7 @@ Branch: <branch>, based on <base>. Another session coordinates you and validates
 
 ## Ticket
 
-<full ticket text, verbatim>
+The ticket is `<workspace>/ticket.md`. Read it first: it is the contract you're validated against. When a decision is made during the work, the coordinator writes it into that file and tells you; re-read it then.
 
 ## Project specifics
 
@@ -43,7 +43,7 @@ If something needs a decision the ticket and code don't answer, don't guess. Wri
 
 ## Finish (only when the coordinator tells you validation passed)
 
-1. Open the PR with the `open-pr` skill against `<base>`. It creates a draft and handles stacks. Put the validator's verdict table in the description's testing section. If the repo's template has no section like that, add it at the end under a "Validation" heading. List the ticket's Setup checklist (secrets, infra, flags, backfills) and any manual checks in a named environment in the notes section as still to do; never perform them yourself.
+1. Open the PR with the `open-pr` skill against `<base>`. It creates a draft and handles stacks. Put the validator's verdict table in the description's testing section, and list design rows the validator couldn't check in the running app as not independently checked. If the repo's template has no section like that, add it at the end under a "Validation" heading. List the ticket's Setup checklist (secrets, infra, flags, backfills) and any manual checks in a named environment in the notes section as still to do; never perform them yourself.
 2. If the change is user-visible, record demo media with <demo tooling> from the app running locally against the shared non-production environment (see "Running the app"), showing the real flow end to end. A Storybook or component-test recording is not a demo. Use that environment's existing data only; don't create or change records. Stop the app afterwards. Save the media to `<workspace>/media/` and never commit it.
 3. Append the PR link and the media paths to `report.md`, then end your turn with `WORK-WORK: DONE`.
 ```
