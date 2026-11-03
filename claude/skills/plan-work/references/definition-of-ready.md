@@ -14,6 +14,7 @@ A ticket is ready when all of these hold:
 - [ ] **Setup outside the code is a checklist**: accounts, secrets, variables, feature flags, infra, data backfills. Each item says who or where.
 - [ ] **Dependencies are real.** "Blocked by" links reflect what the ticket needs to work, not just stack order.
 - [ ] **Claims about the code are verified**, including library behaviour, against the installed version.
+- [ ] **A bug reproduces.** Steps to reproduce, expected vs actual, and where it was seen (environment, version). The first "Done when" item is a regression test that fails before the fix.
 - [ ] **UI work has a Design section** (below): every element the ticket adds or changes points to its design node, and everything the design can't show is written down.
 
 ## Design section (UI tickets)
@@ -36,6 +37,13 @@ The worker and the validator pull the actual values (design variables/tokens and
 ```markdown
 <Position, e.g. "Stack 2/5."> <One sentence on what this delivers.>
 
+## Reproduce
+
+<Bugs only.>
+1. <Step>
+
+Expected: <what should happen>. Actual: <what happens>. Seen in: <environment, version>.
+
 ## Scope
 
 - <Concrete change, with paths>
@@ -51,7 +59,7 @@ The worker and the validator pull the actual values (design variables/tokens and
 
 ## Decisions
 
-<Only if the ticket depends on a decision made during planning: the decision and a short reason.>
+<Decisions made during planning, or later during implementation (marked with where they came from): the decision and a short reason.>
 
 ## Done when
 
@@ -64,4 +72,4 @@ The worker and the validator pull the actual values (design variables/tokens and
 - [ ] <Account / secret / variable / infra step, and where>
 ```
 
-Leave out "Design", "Decisions" and "Setup" when they're empty. Security-relevant tickets say so on the first line and ask for the PR description to call it out.
+Leave out "Reproduce", "Design", "Decisions" and "Setup" when they're empty. Security-relevant tickets say so on the first line and ask for the PR description to call it out.

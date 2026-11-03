@@ -24,17 +24,18 @@ The output is a set of tickets (one or many) that each meet the Definition of Re
 
 State the size in one line, then proceed. Re-size if the work grows.
 
-**Shortcut:** if the user hands you existing tickets and asks whether they're ready, start at step 6.
+**Shortcut:** if the user hands you existing tickets and asks whether they're ready, save their text as drafts (step 5) and start at step 6.
 
 ## Steps
 
-1. **Understand and ground.** Restate the goal in one or two sentences. Find what already exists: code that produces or consumes the data, similar features to copy, auth/access patterns, deploy and CI flow, environments. For UI work, open the design too: pull each mockup node's structure, variables and screenshot, map every element to its node ID and to the design-system component that will render it, and note frames that draw a non-resting state (hover, active, open) and existing elements the mockup leaves out. These become the ticket's Design section and its questions.
+1. **Understand and ground.** Restate the goal in one or two sentences. Find what already exists: code that produces or consumes the data, similar features to copy, auth/access patterns, deploy and CI flow, environments. For UI work, open the design too: pull each mockup node's structure, variables and screenshot, map every element to its node ID and to the design-system component that will render it, and note frames that draw a non-resting state (hover, active, open) and existing elements the mockup leaves out. These become the ticket's Design section and its questions. For a bug, reproduce it or find the failing path in the code first; that becomes the ticket's Reproduce section.
 2. **Approach.** Give options with a recommendation and the trade-offs that matter (security, cost, blast radius, effort). For a task, one paragraph is enough.
 3. **Split into pieces** (feature/project). Each piece must be safe to ship on its own. Put a change that widens access or trust in the same piece as the thing that needs it, never after. Note which pieces can be verified where.
 4. **Delivery shape** (feature/project). Ask about team size if unknown. Choose a stack or parallel tracks; order by real dependencies; put pieces that need ops setup or production-only verification last. For a stack, write the position into each ticket's first line ("Stack 2/5"); `work-work` and `open-pr` take care of branches and `gh stack`.
-5. **Draft tickets** using the template in [references/definition-of-ready.md](references/definition-of-ready.md). Create them in the tracker per [references/trackers.md](references/trackers.md). Unknowns go in the ticket as open questions, never invented.
-6. **Review until clean.** Loop: run the readiness review (below) → apply everything the code answers and list those fixes in one short message → ask the user the remaining questions per [references/interview-rules.md](references/interview-rules.md) and apply the answers. Stop when a review finds no blockers or gaps.
-7. **Report:** tickets and links, decisions made, anything deliberately deferred.
+5. **Draft tickets** using the template in [references/definition-of-ready.md](references/definition-of-ready.md). Write each draft to `~/work-work/<repo>/plans/<slug>/NN-<slug>.md`, outside the repo and the tracker. Nothing is created in the tracker until the review is clean. Unknowns go in the ticket as open questions, never invented.
+6. **Review until clean.** Loop: run the readiness review (below) → apply everything the code answers and list those fixes in one short message → ask the user the remaining questions per [references/interview-rules.md](references/interview-rules.md) and apply the answers. Stop when a review finds no blockers or gaps. If questions are still open after **3** rounds, stop and list them per ticket. Let the user choose: defer each one with a default (the Definition of Ready allows that), or keep planning.
+7. **Create in the tracker** per [references/trackers.md](references/trackers.md), now that the drafts are stable. Confirm titles, order and container in one message, then create the tickets and their blocked-by links. For existing tickets (the shortcut below step 0), patch the changed sections instead.
+8. **Report:** tickets and links, decisions made, anything deliberately deferred.
 
 ## Running the readiness review
 
