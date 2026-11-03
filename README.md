@@ -1,7 +1,7 @@
 # workbench
 
-My portable Claude Code setup — skills, settings, and the bits that don't come
-back on their own after a fresh install.
+My portable Claude Code setup: skills, agents, settings, and the bits that don't
+come back on their own after a fresh install.
 
 ```sh
 git clone https://github.com/krav4enkodm/workbench ~/Projects/workbench
@@ -9,33 +9,16 @@ git clone https://github.com/krav4enkodm/workbench ~/Projects/workbench
 ~/Projects/workbench/install.sh           # roll it out
 ```
 
-The repo is the source of truth; `install.sh` rolls it out onto the machine.
-Files are **copied**, not linked, so the clone can live anywhere (or be deleted)
-and nothing on the machine changes until you run the installer again. Anything
-it replaces or removes goes to `~/.claude/backups/install-<timestamp>/`, and
-re-running it is safe.
+## Day-to-day loop
 
-### Day-to-day loop
-
-1. Change things **in the repo**, then `./install.sh`.
+1. Change things **in the repo**, then run `./install.sh`.
 2. If you tweaked something live (a skill, a setting), `./install.sh --check`
    shows the drift as a diff. Copy what you want to keep into the repo, commit,
    then run `./install.sh` so the machine matches the repo again.
 
-### What the installer does
-
-1. **Checks prerequisites:** `git` and `jq` are required. It warns about `claude`,
-   `gh` (plus `gh auth`), `herdr`, `npx` and `avr`.
-2. **Copies files** (skills, agents, the status line script) into `~/.claude/`.
-   It records what it installed in `~/.claude/.workbench-manifest`, so a skill
-   deleted from the repo is removed on the next run. Skills it didn't install
-   are left alone.
-3. **Merges settings** into the live files instead of replacing them. Repo keys
-   win, and keys added locally by other tools (herdr's hook, `autoMode`, ...)
-   are kept. Removing a key from the repo does not remove it on the machine.
-4. **Sets up integrations:** herdr's Claude integration, the `gh stack` extension
-   (`github/gh-stack`), plugin marketplaces and the enabled plugins, through
-   `herdr integration`, `gh extension` and `claude plugin`.
+Files are copied, so a live edit under `~/.claude/` is overwritten by the next
+install (after a backup to `~/.claude/backups/`). How the installer works and why:
+[docs/decisions.md](docs/decisions.md).
 
 ## What's here
 
@@ -81,34 +64,5 @@ demo tooling are discovered per project. For demo videos `work-work` uses the
 project's own demo skill, or the `record-video` skill from
 agent-video-recorder if `avr` is installed.
 
-## What is deliberately not here
-
-- **Plugin code** — Claude Code installs and updates plugins itself. `settings.json`
-  lists which are enabled and `install.sh` installs any that are missing.
-  Vendoring the cache would fight the updater.
-- **Machine-specific settings** — herdr's `SessionStart` hook (herdr installs and
-  updates it) and the `autoMode` environment block stay local. The settings merge
-  leaves them in place.
-- **Credentials, history, sessions, project state** — `~/.claude/.credentials.json`,
-  `history.jsonl`, `projects/`, `sessions/`, `session-env/`, `todos/`. Machine-local
-  and/or secret.
-- **`~/.claude.json` wholesale** — it mixes real config with `oauthAccount`,
-  `userID`, telemetry and per-project caches. Only `mcpServers` is portable, which
-  is why it's merged rather than replaced.
-- **Employer-specific skills** — anything referencing internal package naming,
-  private wikis or in-house design systems stays out of here and lives either in
-  the relevant work repo or unversioned in `~/.claude/skills/`.
-- **Repo-scoped skills** — skills under a project's own `.claude/skills/` travel
-  with that clone. If a skill seems missing, check the repo you're in.
-- **Shell dotfiles and toolchain** — out of scope for now; this repo is the Claude
-  harness only.
-
-## Caveats
-
-- **Live edits are not saved anywhere.** Since files are copies, a skill edited
-  under `~/.claude/` stays on that machine until you bring it back into the repo.
-  `./install.sh --check` is how you find those edits. The next `./install.sh`
-  overwrites them (after backing them up).
-- **Keep it publishable.** Everything here is intentionally free of employer
-  internals so this repo can go public without a scrub. Genericize before adding,
-  not after.
+If a skill seems missing, check the repo you're in: skills under a project's own
+`.claude/skills/` travel with that clone, not with the workbench.
