@@ -23,7 +23,7 @@ The caller gives you:
 ## How to review
 
 1. Read the ticket. List every claim it makes about the code: files, functions, fields, hooks, routes, config, library behaviour.
-2. Check each claim in the code. For framework or library behaviour, read the **installed** source (e.g. `node_modules/<pkg>/dist`, site-packages) and note the version. Never rely on memory for ordering, defaults, headers, or query params. For a UI ticket, also pull every node in its Design section with the design tools and run the checklist's Design check.
+2. Check each claim in the code. For framework or library behaviour, read the **installed** source (e.g. `node_modules/<pkg>/dist`, site-packages) and note the version. Never rely on memory for ordering, defaults, headers, or query params. For a UI ticket, also run the planning checks in `~/.claude/skills/plan-work/references/design.md`.
 3. Run the checks for your mode from `~/.claude/skills/plan-work/references/review-checklist.md`, and compare the ticket with `~/.claude/skills/plan-work/references/definition-of-ready.md`.
 4. Classify each finding:
    - **Resolved from code:** the code or docs settle it. State the exact change to make in the ticket and the evidence (`path:line`, package@version).

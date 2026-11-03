@@ -32,7 +32,7 @@ The ticket is done when the validator returns PASS on the final diff and the wor
 | Default branch | `gh repo view --json defaultBranchRef -q .defaultBranchRef.name` |
 | Checks (test, lint, typecheck, format) | The repo's CLAUDE.md / AGENTS.md / CONTRIBUTING, then the task runner (`package.json` scripts, Makefile, justfile, nx, etc.) |
 | Demo tooling | The repo's own demo skill if it has one (it knows the test accounts and data rules), else the global `record-video` skill (`avr` on PATH), else skip. Only for user-visible changes. Always in unattended mode |
-| Running the app | The repo's agent instructions and dev scripts: the command that serves the app locally against a shared non-production environment (e.g. a dev server pointed at staging), its URL, and how browser automation gets a session (a saved storage state, a shared one, or a login the user does once). Used for the worker's design check, the validator's running-app check, and the demo. Only one dev server at a time: if one is already running, use it or wait for the port, never kill a process you didn't start |
+| Running the app | The repo's agent instructions and dev scripts: the command that serves the app locally against a shared non-production environment (e.g. a dev server pointed at staging), its URL, and how browser automation gets a session (a saved storage state, a shared one, or a login the user does once). Used for the worker's design check, the validator's running-app check, and the demo. Only one dev server at a time: if one is already running, use it or wait for the port |
 | Design tool | The ticket's Design section names the source (e.g. a Figma file key). The tools are the design MCP's (`get_design_context`, `get_variable_defs`, `get_screenshot` for Figma) |
 
 ## Per-ticket workspace
@@ -63,8 +63,7 @@ Everything outside the repo for a ticket lives in one folder:
    - `WORK-WORK: DONE` → go to step 7.
    - `WORK-WORK: BLOCKED` → show the user the question exactly as written, with a herdr notification (`--sound request`). Write the answer into `ticket.md` as an amendment, then send the worker the answer, tell it `ticket.md` changed, and wait again.
    - **Idle with no marker, or blocked on a permission prompt** → read the pane, tell the user what it's waiting on, and don't answer approval dialogs for them.
-7. **Validate.** Start the `ticket-validator` agent with the current text of `ticket.md`, the worktree path, the base ref and the check commands. For a UI ticket, add the design tool and file key, and "Running the app" from step 3. Give it nothing the worker wrote: no report, no summary, no design table. It pulls the design and measures the running app itself.
-   Record `git -C <worktree> rev-parse HEAD` and `git -C <worktree> status --porcelain --untracked-files=no` before it starts, and compare them after it returns. If either changed, the validator touched the worktree: discard its verdict and tell the user.
+7. **Validate.** Start the `ticket-validator` agent with the current text of `ticket.md`, the worktree path, the base ref and the check commands. For a UI ticket, add the design tool and file key, and "Running the app" from step 3. Give it nothing the worker wrote: no report, no summary. It pulls the design and measures the running app itself.
 8. **Fix loop.** On FAIL, send the validator's gap list to the worker and go back to step 6. After **2** failed rounds, stop: notify the user with the remaining gaps and leave the worker running.
 9. **Finish.** On PASS, prompt the worker with the "Finish" section of the brief: open the draft PR, record demo media.
 10. **Report.** Send a herdr notification (`--sound done`). Then reply with:
@@ -91,12 +90,11 @@ An amendment is any decision made after planning: an answer to a BLOCKED questio
 
 - Edit `ticket.md` in place: a changed scope goes in Scope or Out of scope, and the decision itself gets a line under Decisions saying where it came from ("from review", "answer to the worker's question").
 - Tell the worker `ticket.md` changed before it continues.
-- At Report, and after each review round, write the amendments back to the tracker: patch the Decisions and Scope sections per [trackers.md](../plan-work/references/trackers.md), or edit the markdown ticket file. If the repo has its own ticket skill, follow its rules for edits. Don't change status, assignee or priority.
+- At Report, and after each review round, write the amendments back to the tracker: patch the Decisions and Scope sections per [trackers.md](../plan-work/references/trackers.md), or edit the markdown ticket file. If the repo has its own ticket skill, follow its rules for edits.
 
 ## Rules
 
 - **Never answer an approval dialog or a question for the user.** Relay it exactly as it appears.
-- **Draft PRs only.** Never mark a PR ready, merge, or request reviewers.
-- **No tracker status changes** unless the repo's ticket skill says to do them. Writing amendments back is the only ticket edit.
+- **Writing amendments back is the only ticket edit.** No status, assignee or priority changes unless the repo's ticket skill says to.
 - **Never close the worktree, pane or workspace.** Cleanup after merge is the user's call.
 - **Never copy production data into briefs, tests, or demos.** Tests use synthetic data; demos use the shared non-production environment's existing data, read-only.

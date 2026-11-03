@@ -15,22 +15,7 @@ A ticket is ready when all of these hold:
 - [ ] **Dependencies are real.** "Blocked by" links reflect what the ticket needs to work, not just stack order.
 - [ ] **Claims about the code are verified**, including library behaviour, against the installed version.
 - [ ] **A bug reproduces.** Steps to reproduce, expected vs actual, and where it was seen (environment, version). The first "Done when" item is a regression test that fails before the fix.
-- [ ] **UI work has a Design section** (below): every element the ticket adds or changes points to its design node, and everything the design can't show is written down.
-
-## Design section (UI tickets)
-
-The design file is the only source of visual values. The ticket says **where** to look and **what the design doesn't say**. It never copies sizes, colours, fonts or spacing into its text: a copy goes stale the moment the design changes, and the validator would then approve the stale value.
-
-It holds three things:
-
-- **Element map.** One line per element the ticket adds or changes: the element, its design node ID, and the design-system component expected to render it (e.g. "Submit button: 12-345, design-system `Button`"). Menus, popovers and other open states get their own node.
-- **What the design can't show.** Decisions a static frame can't express:
-  - which state a frame draws when it isn't the resting one (hover, active, open, selected, loading, disabled), and what the element looks like at rest;
-  - existing elements the mockup leaves out, and whether they stay or go;
-  - behaviour: what each control does, empty and loading states.
-- **Allowed deviations.** Every place the build will knowingly differ from the design, with the reason.
-
-The worker and the validator pull the actual values (design variables/tokens and what they resolve to) from these nodes at check time.
+- [ ] **UI work has a Design section** per [design.md](design.md): every element the ticket adds or changes points to its design node, and everything the design can't show is written down.
 
 ## Ticket template
 
@@ -51,7 +36,7 @@ Expected: <what should happen>. Actual: <what happens>. Seen in: <environment, v
 
 ## Design
 
-<UI tickets only. Element map (element — design node ID — expected component), then what the design can't show (states, kept or removed elements, behaviour), then allowed deviations. Node IDs and decisions only; no copied values.>
+<UI tickets only, per design.md: element map, what the design can't show, allowed deviations. Node IDs and decisions only; no copied values.>
 
 ## Out of scope
 
@@ -64,7 +49,7 @@ Expected: <what should happen>. Actual: <what happens>. Seen in: <environment, v
 ## Done when
 
 - Tests: <what they prove>
-- Design (UI tickets): every element in the Design section matches its node in the running app; see the worker brief's design check.
+- Design (UI tickets): every element in the Design section matches its node in the running app.
 - <Environment>: <manual check>
 
 ## Setup (outside the diff)
