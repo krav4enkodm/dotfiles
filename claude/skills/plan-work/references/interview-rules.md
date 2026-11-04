@@ -3,15 +3,13 @@
 ## What to ask
 
 - Only decisions with a real choice: product behaviour, audience, trade-offs, ownership, naming the user cares about.
-- Not facts the code, docs, or installed dependencies answer. Apply those and list them in one short message.
 - Highest-impact first: questions that change the data model, access, or the split come before cosmetic ones.
 
 ## How to ask
 
-- Use the question tool when one is available: up to 4 questions per batch, 2–4 options each, the recommended option first with "(Recommended)" in its label.
+- Use the question tool when one is available, with the recommended option first.
 - Each question stands on its own: name the ticket and the thing it decides. The user may see only the question dialog.
 - Give each option a one-line consequence, not just a label.
-- Use previews for concrete shapes (data layouts, code snippets) the user should compare.
 
 ## When the user doesn't understand
 

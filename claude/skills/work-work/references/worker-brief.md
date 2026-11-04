@@ -24,17 +24,10 @@ The ticket is `<workspace>/ticket.md`. Read it first: it is the contract you're 
 2. Turn each "Done when" item into a test that fails first, where it can be tested automatically. Then implement until those tests pass.
 3. Stay inside the ticket's Scope. Anything in "Out of scope" belongs to another ticket, even if fixing it looks easy.
 4. Run the checks listed above until they pass.
-5. **Design check** (only if the ticket has a Design section). Pull values from the design, never from memory or the ticket text:
-   - For each element in the Design section, pull its node with the design tool (variables/tokens and what they resolve to, plus the structure and a screenshot). Read the ticket's notes on states first: a node drawn as hover, active or open is not the resting look.
-   - Implement each value through the design-system prop or token that produces it, not a hardcoded value. Check the component's defaults in the installed source (font size, title case, margins between siblings); they often differ from the design.
-   - Start the app as described under "Running the app" and measure each element's computed styles in it: every property the node's variables cover (typography: size, weight, line height, case; colour and background per state; size; spacing to neighbours). Check each state the ticket names (rest, hover, open, disabled).
-   - Where a value can be asserted cheaply, add it to the component's test (e.g. computed font size), so CI guards it.
-   - A mismatch you can't fix inside the Scope, or a design question the ticket doesn't answer, goes to `report.md` as a question; end with `WORK-WORK: BLOCKED`.
-   - Stop the app when you're done.
+5. **Design check** (only if the ticket has a Design section): follow "Building" in `~/.claude/skills/plan-work/references/design.md`. Take values from the design, never from memory or the ticket text.
 6. Commit on this branch with the `commit` skill if it's installed, otherwise following the repo's commit conventions. Don't push yet.
 7. Write `<workspace>/report.md`:
    - each "Done when" item, and how it's met (test name or `path:line`);
-   - for UI tickets, the design table: element · property · design variable and value · prop/token used · measured value in the running app · match;
    - decisions you made that the ticket didn't specify;
    - anything you couldn't do, and why.
 8. End your turn with the line `WORK-WORK: DONE`.

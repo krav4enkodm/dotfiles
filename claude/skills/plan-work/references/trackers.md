@@ -20,9 +20,6 @@ The skill speaks in generic terms: **container** (project / epic / milestone), *
 
 ## Rules
 
-- Draft outside the tracker until the readiness review is clean (`plan-work` step 5), so the tracker never holds half-finished tickets and you don't patch them round after round.
 - Creating tickets is outward-facing: confirm the plan (titles, order, container) once, before the first create, unless the user already asked you to create them.
-- `work-work` writes decisions made during implementation back to the ticket's Decisions and Scope sections. That's the only edit it makes.
 - Assign, prioritise, or schedule only when asked or when the repo's ticket skill says to.
 - When editing a ticket later, patch the affected section instead of resending the whole description. Trackers rewrite markdown when they save it (e.g. `-` bullets become `*`, table cells get padded), so copy patch anchors from the ticket as last returned, not from what you sent.
-- Put the stack position in each ticket ("Stack 3/6") so the order survives outside the stacking tool.

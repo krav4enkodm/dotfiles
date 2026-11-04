@@ -41,15 +41,15 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 |---|---|---|
 | `commit` | Commits following the conventions of whatever repo you're in, detected from its history. Title = what changed, body = why. | — |
 | `plan-work` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase. Works with Linear, Jira, GitHub Issues or markdown files. | `readiness-reviewer` agent |
-| `work-work` | Runs only as `/work-work`. Implements one ready ticket in its own herdr worktree with a separate Claude worker, checks it with an independent validator, and opens a draft PR. | `plan-work` (`definition-of-ready.md`, `trackers.md`), `ticket-validator` agent, herdr |
+| `work-work` | Runs only as `/work-work`. Implements one ready ticket in its own herdr worktree with a separate Claude worker, checks it with an independent validator, and opens a draft PR. | `plan-work` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` agent, herdr |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; handles `gh stack` stacks. | `gh stack` (optional) |
 
 ## Agents
 
 | Agent | Used by | What it does | Depends on |
 |---|---|---|---|
-| `readiness-reviewer` | `plan-work` | Checks a ticket's claims against the code and returns gaps and questions. | `plan-work` (`review-checklist.md`, `definition-of-ready.md`), `bash-guard.sh` hook, Figma plugin |
-| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket, the diff and the running app; returns PASS or FAIL with a gap list. | `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP (UI tickets) |
+| `readiness-reviewer` | `plan-work` | Checks a ticket's claims against the code and returns gaps and questions. | `plan-work` (`review-checklist.md`, `definition-of-ready.md`, `design.md`), `bash-guard.sh` hook, Figma plugin |
+| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket, the diff and the running app; returns PASS or FAIL with a gap list. | `plan-work` (`design.md`), `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP (UI tickets) |
 
 ## Rules
 

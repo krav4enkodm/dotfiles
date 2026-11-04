@@ -20,7 +20,7 @@ The caller gives you:
 - the repo's check commands (test, lint, typecheck, format);
 - for a UI ticket, the design tool and file key, and how to run the app: the start command, its URL, and how the browser gets a session.
 
-You are deliberately not given the implementer's notes or design table. Judge the code and the running app, not the claims.
+You are deliberately not given the implementer's notes. Judge the code and the running app, not the claims.
 
 ## How to validate
 
@@ -35,12 +35,7 @@ You are deliberately not given the implementer's notes or design table. Judge th
    Some changes are **incidental**: the in-scope work requires them mechanically. Examples: a lockfile updated for a dependency the Scope adds, code regenerated from a schema the Scope changes, snapshots of components the Scope changes, the repo's formatter on touched files. List them separately; they don't fail the ticket. A change that only seems convenient is out of scope.
 4. Check the obvious failure modes in the changed code: unhandled error paths the ticket names, missing auth or validation on new entry points, secrets or personal data in logs, fixtures or tests.
 5. Run the check commands, scoped to the affected code when the repo supports it. Record pass or fail, with the first relevant error lines.
-6. **Design (only if the ticket has a Design section).** Pull every node it lists from the design yourself: variables/tokens and their resolved values, structure, screenshot. For each element and each property those variables cover (typography, colour and background per state, size, spacing to neighbours):
-   - Find what produces it in the code: the design-system component, prop or token. Read the component's default in the installed source when no prop is set; a default that differs from the design is a mismatch.
-   - Find a test that asserts it, or reason it from the code; mark the row **met**, **mismatch** (state design value vs what the code produces) or **unverified** (nothing in code or tests settles it; the running-app check then has to).
-   - Apply the ticket's notes on states and allowed deviations: a node drawn as hover or active isn't the resting look, and a listed deviation isn't a mismatch.
-   Then check the **running app** for every row still unverified. Start the app as described in your input (in the background), open the page in the browser tools, and read each property with `get_css_styles`, or `getComputedStyle` through `evaluate_script`. Use `hover` and `click` to reach the states the ticket names (hover, open, selected). Only read: don't submit forms or create, change or delete data. Stop the app when you're done, and never stop a process you didn't start. A row you measured becomes **met** or **mismatch**.
-   A mismatch makes the ticket FAIL. Rows you still couldn't check (the app wouldn't start, no browser session) stay **unverified**: they don't fail the ticket, but list them under "Not independently checked" so the user knows.
+6. **Design (only if the ticket has a Design section).** Pull every node it lists yourself and follow "Validating" in `~/.claude/skills/plan-work/references/design.md`. A mismatch makes the ticket FAIL. Unverified rows don't, but list them under "Not independently checked" so the user knows.
 
 Be skeptical and concrete. Don't pass something because it looks plausible, and don't fail on style the repo's linters accept.
 
