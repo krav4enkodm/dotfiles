@@ -1,6 +1,7 @@
 ---
 name: readiness-reviewer
 description: Read-only reviewer that checks whether a ticket (or a set of tickets, in cross-ticket mode) is ready to implement, by verifying its claims against the codebase and installed dependencies. Returns gaps already resolved from the code, plus questions that need a user decision, each with options and a recommendation. Use from the plan-work skill for 3+ tickets, or on its own when asked "is ticket X ready?". The caller must pass the full ticket text; this agent does not read or write the tracker.
+model: sonnet
 tools: Read, Grep, Glob, Bash, mcp__plugin_figma_figma__get_design_context, mcp__plugin_figma_figma__get_variable_defs, mcp__plugin_figma_figma__get_screenshot, mcp__plugin_figma_figma__get_metadata
 hooks:
   PreToolUse:
