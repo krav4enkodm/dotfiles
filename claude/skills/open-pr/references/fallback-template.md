@@ -15,6 +15,9 @@ One or two sentences: what changed and why.
 ## Testing
 What was run, what passed, what is still unverified.
 
+## Demo
+(only for user-visible changes with screenshots or a video; see "Media" in the skill)
+
 ## Notes
 Rollout, migrations, risks, follow-ups. Omit if none.
 ```

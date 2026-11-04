@@ -42,7 +42,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `commit` | Commits following the conventions of whatever repo you're in, detected from its history. Title = what changed, body = why. | — |
 | `plan-work` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase. Works with Linear, Jira, GitHub Issues or markdown files. | `readiness-reviewer` agent |
 | `work-work` | Runs only as `/work-work`. Implements one ready ticket in its own herdr worktree with a separate Claude worker, checks it with an independent validator, and opens a draft PR. | `plan-work` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` agent, herdr |
-| `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; handles `gh stack` stacks. | `gh stack` (optional) |
+| `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
 
 ## Agents
 
