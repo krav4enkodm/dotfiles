@@ -65,7 +65,7 @@ Everything outside the repo for a ticket lives in one folder:
    - **Idle with no marker, or blocked on a permission prompt** → read the pane, tell the user what it's waiting on, and don't answer approval dialogs for them.
 7. **Validate.** Start the `ticket-validator` agent with the current text of `ticket.md`, the worktree path, the base ref and the check commands. For a UI ticket, add the design tool and file key, and "Running the app" from step 3. Give it nothing the worker wrote: no report, no summary. It pulls the design and measures the running app itself.
 8. **Fix loop.** On FAIL, send the validator's gap list to the worker and go back to step 6. After **2** failed rounds, stop: notify the user with the remaining gaps and leave the worker running.
-9. **Finish.** On PASS, prompt the worker with the "Finish" section of the brief: open the draft PR, record demo media.
+9. **Finish.** On PASS, prompt the worker with the "Finish" section of the brief: record demo media, then open the draft PR with the media attached.
 10. **Report.** Send a herdr notification (`--sound done`). Then reply with:
     - the PR link;
     - the validator's verdict table, with design rows it couldn't check in the running app listed separately as "not independently checked";

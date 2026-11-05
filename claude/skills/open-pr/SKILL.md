@@ -66,7 +66,17 @@ Rules:
 
 - Title: short and imperative, prefixed with the ticket ID when there is one, following the repo's existing PR title style (check `gh pr list --state merged --limit 10`).
 - Create with `gh pr create --draft --base <base> --title ... --body-file <file>` (or `gh pr edit <n> --body-file <file>` for an existing PR). Write the body to a temp file rather than passing it inline, so Markdown and backticks survive.
+- Attach media if you were given any (see [Media](#media)).
 - Return the PR URL.
+
+## Media
+
+Screenshots and demo videos belong in the PR when the change is user-visible and you were given the files (e.g. by whoever recorded the demo). Never commit them to the repo.
+
+- Upload them with `--attach` on the same `gh pr create` or `gh pr edit` call. Check `gh pr edit --help` lists it; on an older `gh` without it, give the user the file paths and the section to drag them into.
+- **Images:** reference each one in the body where it belongs, as a Markdown image whose alt text says what it shows and whose target is the file's local path, and pass the same path to `--attach`. `gh` uploads it and rewrites the reference in place.
+- **Videos:** `gh` can't give a video alt text (`--attach 'demo.webm#...'` fails), and it appends the uploaded video's URL to the end of the body. After publishing, move that URL into the template's screenshots/demo section (or "Demo" in the fallback template), with one line on what the video shows, and re-save the body with `gh pr edit <n> --body-file <file>`.
+- In a stack, attach media only to the PR whose layer it shows.
 
 ## Stacks
 
