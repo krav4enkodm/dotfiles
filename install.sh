@@ -6,8 +6,8 @@
 #
 # The repo is the source of truth. Files are copied, not linked; settings are
 # merged so keys other tools add locally (herdr's hook, autoMode, ...) survive.
-# Arrays are replaced, so a PreToolUse hook added only on this machine is
-# overwritten by the repo's list.
+# Arrays are replaced, except hook lists: there a local entry survives unless
+# the repo has an entry with the same matcher.
 # Anything replaced or removed is backed up to ~/.claude/backups/install-<ts>/.
 set -euo pipefail
 
@@ -97,7 +97,9 @@ fi
 
 # --------------------------------------------------------------------- settings
 # Repo keys win; keys only present locally are kept. Objects merge deeply,
-# arrays are replaced. Removing a key from the repo does not remove it locally:
+# arrays are replaced. Hook lists (hooks.<event>) are the exception: the repo's
+# entries replace local entries with the same matcher, and local entries with
+# other matchers are appended after them. Removing a key from the repo does not remove it locally:
 # list it (dotted path, e.g. "voice.mode") in settings-removed.json for that.
 echo
 echo "Settings"
@@ -127,7 +129,12 @@ merge_json() { # merge_json <target-file> <label> <jq-filter> [jq args...]
 }
 
 merge_json "$CLAUDE_DIR/settings.json" "settings.json" \
-  'reduce ($rm[0][] | split(".")) as $p (. * $repo[0]; delpaths([$p]))' \
+  '. as $cur
+   | (. * $repo[0])
+   | reduce ($repo[0].hooks // {} | keys[]) as $ev (.;
+       .hooks[$ev] += [ ($cur.hooks[$ev] // [])[]
+         | select(.matcher as $m | $repo[0].hooks[$ev] | any(.[]; .matcher == $m) | not) ])
+   | reduce ($rm[0][] | split(".")) as $p (.; delpaths([$p]))' \
   --slurpfile repo "$SRC/settings.json" --slurpfile rm "$SRC/settings-removed.json"
 merge_json "$CLAUDE_JSON" "mcpServers -> ${CLAUDE_JSON/#$HOME/\~}" \
   '.mcpServers = ((.mcpServers // {}) + $add[0])' --slurpfile add "$SRC/mcp-servers.json"

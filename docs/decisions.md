@@ -20,7 +20,8 @@ those edits, and the next `./install.sh` overwrites them after backing them up.
    are left alone.
 3. **Merges settings** into the live files instead of replacing them. Repo keys
    win, and keys added locally by other tools (herdr's hook, `autoMode`, ...)
-   are kept. Objects merge deeply, arrays are replaced. Removing a key from the
+   are kept. Objects merge deeply, arrays are replaced, except hook lists (see
+   below). Removing a key from the
    repo does not remove it on the machine; to retire a key everywhere, also list
    it in `settings-removed.json`, which the installer deletes after the merge.
    Each machine may keep its own additions (extra plugins, MCP servers), so
@@ -30,9 +31,11 @@ those edits, and the next `./install.sh` overwrites them after backing them up.
    `herdr integration`, `gh extension` and `claude plugin`.
 
 Hook scripts are managed one file at a time, because herdr keeps its own
-script in `~/.claude/hooks/`. In settings, `hooks.PreToolUse` is an array, so
-the repo's list replaces any `PreToolUse` entry added only on the machine;
-`SessionStart` and other events merge as separate keys.
+script in `~/.claude/hooks/`. In settings, each `hooks.<event>` is an array of
+entries keyed by `matcher`. The repo's entries replace local entries with the
+same matcher; local entries with any other matcher are kept after them, so a
+tool that adds its own `PreToolUse` hook on one machine keeps it. Events the
+repo doesn't set merge as separate keys.
 
 Anything it replaces or removes goes to `~/.claude/backups/install-<timestamp>/`.
 Re-running it is safe.
