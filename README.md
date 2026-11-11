@@ -55,6 +55,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 
 | Rule | Loads for | What it says |
 |---|---|---|
+| `code-comments` | `*.ts`, `*.tsx` | No comments that narrate the code; keep directives and short "why" notes. |
 | `frontend-feature-layers` | `*.tsx`, `*.jsx` | Lay out a data-backed React feature as data / services / presentational components / thin container. |
 
 ## Guardrails
