@@ -66,6 +66,9 @@ the usual form of a command, so treat them as guardrails, not a sandbox.
 - **Deny rules** in `settings.json`: no `gh pr merge`, `gh pr ready`,
   `gh stack merge`, `gh stack unstack`, or `gh stack submit --open`. Run those
   yourself.
+- **Ask rules** in `settings.json`: posting on GitHub (`gh pr comment`,
+  `gh issue comment`, `gh pr review`, and `gh api` calls on comments, reviews
+  or GraphQL) always asks for approval, even in auto mode.
 - **`hooks/bash-guard.sh session`**, on every Bash call: no `git commit` on the
   default branch, and `gh pr create` needs `--draft`.
 - **`bash-guard.sh reviewer` / `validator`**, in the agents' frontmatter: the
