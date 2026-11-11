@@ -57,7 +57,9 @@ Pick the type that matches what changed:
 Rules:
 
 - Diagram the change, not the whole system. Keep it under ~15 nodes.
-- Highlight what's new or changed, e.g. `classDef changed fill:#d4f8d4,stroke:#2da44e` on a flowchart, or a `Note` / `rect` block in a sequence diagram.
+- Highlight what's new or changed, e.g. `classDef changed fill:#dafbe1,stroke:#1a7f37,color:#1f2328` on a flowchart, or a `Note` / `rect` block in a sequence diagram.
+- Keep text readable in both GitHub themes. Dark mode draws light text by default, so a light fill with no text color hides the label. Whenever you set `fill`, also set `color` to a contrasting text color. For `rect` in a sequence diagram, use a translucent tint such as `rect rgba(46, 160, 67, 0.15)` rather than a solid light color.
+- Keep labels short so they fit their boxes. In GitHub's renderer, long labels can spill past their boxes or get clipped. Aim for a few words per line, split longer ones with `<br/>`, and keep markdown and inline code out of labels. Put the detail in the prose instead.
 - For a change that replaces a flow, a before/after pair is fine if both stay small.
 - Use real names from the code (services, tables, functions) so reviewers can map nodes to the diff.
 - Make sure it's valid Mermaid. GitHub renders it in a ```` ```mermaid ```` block.
