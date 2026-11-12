@@ -1,5 +1,5 @@
 ---
-name: plan-work
+name: work-plan
 description: Turn an idea, feature, project, or rough ticket into ready-to-implement tickets, grounded in the codebase. Sizes the work (task / feature / project), proposes an approach, splits it into shippable pieces, drafts tickets, then loops a readiness review and a gap-filling interview until every ticket meets the Definition of Ready. Use when the user asks to plan, scope, break down, or ticket some work, asks "is this ticket ready?", or wants to make existing tickets ready to implement. Not for implementing the work itself.
 argument-hint: "[what to build, or ticket IDs to check]"
 ---

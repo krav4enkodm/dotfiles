@@ -12,9 +12,9 @@ docs/decisions.md for how the installer works and what is deliberately left out.
 - **Keep it publishable.** No employer internals anywhere, including commit
   messages and PR descriptions: no in-house design systems, product terms,
   ticket keys, internal URLs or package names. Use generic examples.
-- **Skills depend on each other through `plan-work/references/`.** `work-work` and
+- **Skills depend on each other through `work-plan/references/`.** `work-work` and
   both agents read files from there. When renaming or moving any of them, update
-  every reference (`grep -rn 'plan-work/' claude/`) and the "Depends on" columns
+  every reference (`grep -rn 'work-plan/' claude/`) and the "Depends on" columns
   in README.md.
 - **Keep README.md in step** when adding, removing or renaming a skill or agent.
 - **Run `./check.sh` before committing.** It runs shellcheck, validates the JSON,

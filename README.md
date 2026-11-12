@@ -40,16 +40,16 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | Skill | What it does | Depends on |
 |---|---|---|
 | `commit` | Commits following the conventions of whatever repo you're in, detected from its history. Title = what changed, body = why. | — |
-| `plan-work` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase. Works with Linear, Jira, GitHub Issues or markdown files. | `readiness-reviewer` agent |
-| `work-work` | Runs only as `/work-work`. Implements one ready ticket in its own herdr worktree with a separate Claude worker, checks it with an independent validator, and opens a draft PR. | `plan-work` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` agent, herdr |
+| `work-plan` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase. Works with Linear, Jira, GitHub Issues or markdown files. | `readiness-reviewer` agent |
+| `work-work` | Runs only as `/work-work`. Implements one or more ready tickets in parallel, each in its own herdr worktree with a separate Claude worker, checks each with an independent validator, and opens a draft PR per ticket. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` agent, herdr |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
 
 ## Agents
 
 | Agent | Used by | What it does | Depends on |
 |---|---|---|---|
-| `readiness-reviewer` | `plan-work` | Checks a ticket's claims against the code and returns gaps and questions. | `plan-work` (`review-checklist.md`, `definition-of-ready.md`, `design.md`), `bash-guard.sh` hook, Figma plugin |
-| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket, the diff and the running app; returns PASS or FAIL with a gap list. | `plan-work` (`design.md`), `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP (UI tickets) |
+| `readiness-reviewer` | `work-plan` | Checks a ticket's claims against the code and returns gaps and questions. | `work-plan` (`review-checklist.md`, `definition-of-ready.md`, `design.md`), `bash-guard.sh` hook, Figma plugin |
+| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket, the diff and the running app; returns PASS or FAIL with a gap list. | `work-plan` (`design.md`), `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP (UI tickets) |
 
 ## Rules
 
@@ -75,15 +75,15 @@ the usual form of a command, so treat them as guardrails, not a sandbox.
   readiness reviewer runs read-only commands only; the validator can run the
   repo's checks but can't change git state or call `gh`.
 
-`plan-work/references/` is shared: renaming or moving a file there breaks the
+`work-plan/references/` is shared: renaming or moving a file there breaks the
 skills and agents listed above.
 
 ## Plan → work workflow
 
 ```
-/plan-work  →  drafts → readiness review (max 3 rounds) → tickets created in the tracker
-/work-work  →  per ticket: ticket.md → herdr worktree → worker Claude → validator → draft PR + demo media
-you         →  review the draft PR; iterate in the worker pane or via PR comments
+/work-plan  →  drafts → readiness review (max 3 rounds) → tickets created in the tracker
+/work-work  →  per ticket, in parallel: ticket.md → herdr worktree → worker Claude → validator → draft PR + demo media
+you         →  review the draft PRs; iterate in the worker panes or via PR comments
 ```
 
 Fixed assumptions: Claude Code, [herdr](https://herdr.dev) (`work-work` runs inside it),

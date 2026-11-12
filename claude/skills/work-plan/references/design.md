@@ -1,6 +1,6 @@
 # Design: tickets and checks
 
-One place for how UI tickets handle the design, used at every step: `plan-work` and the `readiness-reviewer` when planning, the `work-work` worker when building, and the `ticket-validator` when checking. Skip this file for tickets without a Design section.
+One place for how UI tickets handle the design, used at every step: `work-plan` and the `readiness-reviewer` when planning, the `work-work` worker when building, and the `ticket-validator` when checking. Skip this file for tickets without a Design section.
 
 ## The rule
 
@@ -21,7 +21,7 @@ With the design tool (for Figma: `get_design_context`, `get_variable_defs`, `get
 
 For each element, find the design-system component and the prop or token that produces each value. Read the component's defaults in the installed source: font size, title case and margins between siblings often differ from the design silently.
 
-## Planning (`plan-work`, `readiness-reviewer`)
+## Planning (`work-plan`, `readiness-reviewer`)
 
 Pull every node and check:
 - Every element the Scope adds or changes has a node, and every node exists and shows that element.
