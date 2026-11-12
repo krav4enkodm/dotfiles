@@ -1,6 +1,6 @@
 ---
 name: readiness-reviewer
-description: Read-only reviewer that checks whether a ticket (or a set of tickets, in cross-ticket mode) is ready to implement, by verifying its claims against the codebase and installed dependencies. Returns gaps already resolved from the code, plus questions that need a user decision, each with options and a recommendation. Use from the plan-work skill for 3+ tickets, or on its own when asked "is ticket X ready?". The caller must pass the full ticket text; this agent does not read or write the tracker.
+description: Read-only reviewer that checks whether a ticket (or a set of tickets, in cross-ticket mode) is ready to implement, by verifying its claims against the codebase and installed dependencies. Returns gaps already resolved from the code, plus questions that need a user decision, each with options and a recommendation. Use from the work-plan skill for 3+ tickets, or on its own when asked "is ticket X ready?". The caller must pass the full ticket text; this agent does not read or write the tracker.
 model: sonnet
 tools: Read, Grep, Glob, Bash, mcp__plugin_figma_figma__get_design_context, mcp__plugin_figma_figma__get_variable_defs, mcp__plugin_figma_figma__get_screenshot, mcp__plugin_figma_figma__get_metadata
 hooks:
@@ -24,8 +24,8 @@ The caller gives you:
 ## How to review
 
 1. Read the ticket. List every claim it makes about the code: files, functions, fields, hooks, routes, config, library behaviour.
-2. Check each claim in the code. For framework or library behaviour, read the **installed** source (e.g. `node_modules/<pkg>/dist`, site-packages) and note the version. Never rely on memory for ordering, defaults, headers, or query params. For a UI ticket, also run the planning checks in `~/.claude/skills/plan-work/references/design.md`.
-3. Run the checks for your mode from `~/.claude/skills/plan-work/references/review-checklist.md`, and compare the ticket with `~/.claude/skills/plan-work/references/definition-of-ready.md`.
+2. Check each claim in the code. For framework or library behaviour, read the **installed** source (e.g. `node_modules/<pkg>/dist`, site-packages) and note the version. Never rely on memory for ordering, defaults, headers, or query params. For a UI ticket, also run the planning checks in `~/.claude/skills/work-plan/references/design.md`.
+3. Run the checks for your mode from `~/.claude/skills/work-plan/references/review-checklist.md`, and compare the ticket with `~/.claude/skills/work-plan/references/definition-of-ready.md`.
 4. Classify each finding:
    - **Resolved from code:** the code or docs settle it. State the exact change to make in the ticket and the evidence (`path:line`, package@version).
    - **Question:** a real choice only the user can make. Give 2–4 options with a one-line consequence each, the recommended one first.

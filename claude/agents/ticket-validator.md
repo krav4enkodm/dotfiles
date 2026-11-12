@@ -35,7 +35,7 @@ You are deliberately not given the implementer's notes. Judge the code and the r
    Some changes are **incidental**: the in-scope work requires them mechanically. Examples: a lockfile updated for a dependency the Scope adds, code regenerated from a schema the Scope changes, snapshots of components the Scope changes, the repo's formatter on touched files. List them separately; they don't fail the ticket. A change that only seems convenient is out of scope.
 4. Check the obvious failure modes in the changed code: unhandled error paths the ticket names, missing auth or validation on new entry points, secrets or personal data in logs, fixtures or tests.
 5. Run the check commands, scoped to the affected code when the repo supports it. Record pass or fail, with the first relevant error lines.
-6. **Design (only if the ticket has a Design section).** Pull every node it lists yourself and follow "Validating" in `~/.claude/skills/plan-work/references/design.md`. A mismatch makes the ticket FAIL. Unverified rows don't, but list them under "Not independently checked" so the user knows.
+6. **Design (only if the ticket has a Design section).** Pull every node it lists yourself and follow "Validating" in `~/.claude/skills/work-plan/references/design.md`. A mismatch makes the ticket FAIL. Unverified rows don't, but list them under "Not independently checked" so the user knows.
 
 Be skeptical and concrete. Don't pass something because it looks plausible, and don't fail on style the repo's linters accept.
 
