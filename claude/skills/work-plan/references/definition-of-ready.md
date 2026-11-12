@@ -4,7 +4,7 @@
 
 A ticket is ready when all of these hold:
 
-- [ ] **One clear outcome.** The title names it; the first line says where it sits (e.g. "Stack 3/6").
+- [ ] **One clear outcome.** The title names it; the first line says its wave and blockers (e.g. "Wave 2 · blocked by PROJ-12").
 - [ ] **Scope is concrete.** Names the files, modules, fields, endpoints, or config it changes. A new data model lists every field with type and required/optional.
 - [ ] **Out of scope is explicit**, naming which sibling ticket owns each excluded part.
 - [ ] **Safe to ship alone.** Merging and deploying it without the tickets above it breaks nothing and exposes nothing.
@@ -12,7 +12,8 @@ A ticket is ready when all of these hold:
 - [ ] **Done when** is testable: named tests, plus a manual check in a named environment.
 - [ ] **Verification environment is stated**, e.g. staging by hand, unit tests only, or production after a manual trigger.
 - [ ] **Setup outside the code is a checklist**: accounts, secrets, variables, feature flags, infra, data backfills. Each item says who or where.
-- [ ] **Dependencies are real.** "Blocked by" links reflect what the ticket needs to work, not just stack order.
+- [ ] **Dependencies are real.** "Blocked by" links reflect what the ticket needs to work, not the order of the plan. The wave follows from them.
+- [ ] **Parallel-safe.** No file in its Scope is changed by another ticket in the same wave, and a contract it shares with a parallel ticket comes from a ticket in an earlier wave.
 - [ ] **Claims about the code are verified**, including library behaviour, against the installed version.
 - [ ] **A bug reproduces.** Steps to reproduce, expected vs actual, and where it was seen (environment, version). The first "Done when" item is a regression test that fails before the fix.
 - [ ] **UI work has a Design section** per [design.md](design.md): every element the ticket adds or changes points to its design node, and everything the design can't show is written down.
@@ -20,7 +21,7 @@ A ticket is ready when all of these hold:
 ## Ticket template
 
 ```markdown
-<Position, e.g. "Stack 2/5."> <One sentence on what this delivers.>
+<Wave and blockers, e.g. "Wave 2 · blocked by PROJ-12." or "Wave 1."> <One sentence on what this delivers.>
 
 ## Reproduce
 

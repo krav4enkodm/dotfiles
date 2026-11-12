@@ -54,4 +54,11 @@ Return exactly this structure, and nothing else:
 - <one line per notable claim you verified, with evidence>
 ```
 
+In cross mode, add a last section with the waves as the links define them, and the files each ticket changes (from its Scope):
+
+```
+### Waves
+| Wave | Ticket | Blocked by | Changes |
+```
+
 READY means no blockers or gaps remain, and no questions are open. Nits alone don't block READY.

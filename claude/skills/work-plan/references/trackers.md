@@ -15,6 +15,8 @@ The skill speaks in generic terms: **container** (project / epic / milestone), *
 | Container | Project (+ milestones) | Epic | Milestone or tracking issue with a task list | `README.md` |
 | Ticket | Issue | Story / Task | Issue | `NN-<slug>.md` |
 | Blocked-by | `blockedBy` relation | "is blocked by" link | "Blocked by #N" line in body | "Blocked by: NN" line |
+| Wave table | Project description | Epic description | Milestone or tracking issue description | `README.md` |
+| Tickets in a plan | Issues in the project | Issues in the epic | Issues in the milestone, or the tracking issue's task list | `NN-*.md` in the folder |
 | Related | `relatedTo` | "relates to" link | "Related: #N" | "Related: NN" |
 | Branch name | Use the issue's generated branch name | Key prefix, e.g. `PROJ-123-…` | `<n>-<slug>` | `<slug>` |
 
