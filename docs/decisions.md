@@ -54,6 +54,8 @@ Re-running it is safe.
   CLAUDE.md is a request; it stays there so Claude plans around the rule, but
   the hook is what enforces it. Deny rules cover fixed commands; the hook
   covers rules that depend on state or flags (the current branch, `--draft`).
+  Ask rules cover what's fine only when I asked for it, like posting on
+  GitHub: a deny would block the post I did ask for.
 - **Agents' read-only promise** is a frontmatter hook, because nothing else
   works here: `permissionMode` is overridden in auto mode, and
   `disallowedTools: Bash(...)` removes Bash entirely.
