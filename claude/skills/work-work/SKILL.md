@@ -79,7 +79,7 @@ Steps 1–3 prepare the run. Steps 4–10 run per ticket, and each ticket moves 
 
     If tickets are still waiting on merges when everything else is done, say which merges they wait for, and leave the merge watch running.
 
-Leave the worktrees and the workers running. The user reviews the PRs and iterates through the worker panes.
+Leave the worktrees and the workers running. The user reviews the PRs and iterates through the worker panes. Once a ticket's PR merges, `/work-retro` in its worker pane looks back at where the user had to step in.
 
 ## Running a plan
 
@@ -150,6 +150,7 @@ An amendment is any decision made after planning: an answer to a BLOCKED questio
 ## Rules
 
 - **Never answer an approval dialog or a question for the user.** Relay it exactly as it appears, with its ticket id.
+- **Start every message to a worker with `Coordinator:`**, except the first one ("Read <path>/brief.md and follow it."). herdr types into the same pane as the user, so this is how `work-retro` tells the run's messages from the user's.
 - **Writing amendments back is the only ticket edit**, besides the plan changes the user approves. No status, assignee or priority changes unless the repo's ticket skill says to.
 - **Never merge a PR or mark it ready.** Merges are the user's; the run waits for them.
 - **Never close a worktree, pane or workspace.** Cleanup after merge is the user's call.
