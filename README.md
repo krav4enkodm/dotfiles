@@ -31,7 +31,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `claude/hooks/*.sh` | `~/.claude/hooks/*.sh` | copied, one file at a time; herdr's own hook there is left alone |
 | `claude/agents/*.md` | `~/.claude/agents/*.md` | copied |
 | `claude/statusline-command.sh` | `~/.claude/statusline-command.sh` | copied; dir / branch / model / context remaining |
-| `claude/settings.json` | `~/.claude/settings.json` | merged; model, permissions and deny rules, hooks, status line, plugins |
+| `claude/settings.json` | `~/.claude/settings.json` | merged; model, permissions and deny rules, hooks, status line, plugins, Remote Control on for every session |
 | `claude/settings-removed.json` | `~/.claude/settings.json` | keys (dotted paths) deleted after the merge |
 | `claude/mcp-servers.json` | `~/.claude.json` → `mcpServers` | merged |
 
