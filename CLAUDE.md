@@ -1,4 +1,4 @@
-# workbench
+# dotfiles
 
 My portable Claude Code setup. `claude/` mirrors `~/.claude/`, and `install.sh`
 copies and merges it onto the machine. See README.md for the file map and

@@ -1,12 +1,12 @@
 ---
 name: work-retro-apply
-description: Turn the workbench fixes collected by work-retro (in ~/work-work/retros/inbox.md) into one draft PR against this repo. Groups the findings, shows how often each came up and whether an earlier fix failed to hold, applies the ones the user picks in generic wording, and moves them to applied.md. Runs only as /work-retro-apply, inside the workbench repo.
+description: Turn the dotfiles fixes collected by work-retro (in ~/work-work/retros/inbox.md) into one draft PR against this repo. Groups the findings, shows how often each came up and whether an earlier fix failed to hold, applies the ones the user picks in generic wording, and moves them to applied.md. Runs only as /work-retro-apply, inside the dotfiles repo.
 disable-model-invocation: true
 ---
 
-# Apply retro findings to the workbench
+# Apply retro findings to the dotfiles repo
 
-`work-retro` runs in a ticket's worker pane and leaves the fixes meant for the workbench in `~/work-work/retros/inbox.md` ([format](../../../claude/skills/work-retro/references/inbox-format.md)). This skill turns them into a PR here. It's the only place those findings become changes: the repo stays the source of truth, and `./install.sh` rolls the merged change out.
+`work-retro` runs in a ticket's worker pane and leaves the fixes meant for the dotfiles repo in `~/work-work/retros/inbox.md` ([format](../../../claude/skills/work-retro/references/inbox-format.md)). This skill turns them into a PR here. It's the only place those findings become changes: the repo stays the source of truth, and `./install.sh` rolls the merged change out.
 
 ## Steps
 

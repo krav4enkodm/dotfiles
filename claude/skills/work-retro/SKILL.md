@@ -1,6 +1,6 @@
 ---
 name: work-retro
-description: Retro of one ticket worked by work-work, run in that ticket's worker pane after its PR merged. Collects every point where the user had to step in (their messages in the pane, decisions added to ticket.md while it was worked, PR review comments), finds what the setup should have known instead, and turns each into a proposed fix. Fixes for the project's own instructions are applied on request; fixes for the workbench skills go to an inbox that work-retro-apply turns into a PR. Runs only as /work-retro.
+description: Retro of one ticket worked by work-work, run in that ticket's worker pane after its PR merged. Collects every point where the user had to step in (their messages in the pane, decisions added to ticket.md while it was worked, PR review comments), finds what the setup should have known instead, and turns each into a proposed fix. Fixes for the project's own instructions are applied on request; fixes for the dotfiles repo skills go to an inbox that work-retro-apply turns into a PR. Runs only as /work-retro.
 argument-hint: "[worktree path]"
 disable-model-invocation: true
 ---
@@ -28,11 +28,11 @@ Make one list of interventions from all sources, oldest first. When the same poi
 |---|---|---|
 | Ticket: missing | The ticket didn't say it: a missing state, a behaviour, an edge case, a design detail | `work-plan`: usually a line in [definition-of-ready.md](../work-plan/references/definition-of-ready.md) or [review-checklist.md](../work-plan/references/review-checklist.md) that would have made planning ask |
 | Ticket: unclear | The ticket did say it, but the worker read it another way, asked about it, or missed it: it was vague, abstract, buried in prose, or contradicted elsewhere in the ticket | `work-plan`: how tickets are written (the template in [definition-of-ready.md](../work-plan/references/definition-of-ready.md), the drafting steps in [SKILL.md](../work-plan/SKILL.md)); the fix usually cuts or sharpens text rather than adding it |
-| Worker | The worker did something the brief or the instructions already rule out, or missed a step of the brief | [worker-brief.md](../work-work/references/worker-brief.md); a hook or deny rule if prose has already failed (see "Which Claude Code feature holds what" in the workbench's `docs/decisions.md`) |
+| Worker | The worker did something the brief or the instructions already rule out, or missed a step of the brief | [worker-brief.md](../work-work/references/worker-brief.md); a hook or deny rule if prose has already failed (see "Which Claude Code feature holds what" in the dotfiles repo's `docs/decisions.md`) |
 | Validator | The validator passed something the user then caught | the [ticket-validator](../../agents/ticket-validator.md) agent, or [design.md](../work-plan/references/design.md) for design checks |
 | Coordinator | Something about how the run was driven: start order, rebases, the app slot, messages to the worker | the `work-work` skill |
 | Setup | A `blocked` or `rejected` entry that keeps happening, a permission prompt | `settings.json` permissions or a hook |
-| Project | A convention or fact about this codebase: a helper to reuse, a pattern, a command | this repo's own CLAUDE.md / AGENTS.md / rules, not the workbench |
+| Project | A convention or fact about this codebase: a helper to reuse, a pattern, a command | this repo's own CLAUDE.md / AGENTS.md / rules, not the dotfiles repo |
 | None | Taste, a one-off, a question the user asked out of interest, a request beyond the ticket | nothing |
 
 To tell the two ticket buckets apart, check the ticket text (as planned, not the amended Decisions) for the point the user made. Found it there → unclear; quote the ticket line next to the user's words. Not there → missing.
@@ -48,7 +48,7 @@ Otherwise, list each intervention:
 ```
 1. «<the user's words, or the review comment>»  (pane | ticket.md | PR)
    Missing: <what the setup should have known, one sentence>
-   Fix: <file> → <the change, specific enough to apply>   [workbench | project]
+   Fix: <file> → <the change, specific enough to apply>   [dotfiles | project]
 ```
 
 Then the None items in one line. Propose only fixes the evidence supports, and prefer changing or removing a line over adding one.
@@ -58,4 +58,4 @@ Then the None items in one line. Propose only fixes the evidence supports, and p
 Ask which fixes to keep.
 
 - **Project fixes**, applied here on the user's OK: fetch, branch off the default branch (the ticket's branch has merged), edit the repo's instructions, commit with the `commit` skill and open a draft PR with `open-pr`.
-- **Workbench fixes** are never applied from here; the workbench is another repo. Append the kept ones to `~/work-work/retros/inbox.md` in the format in [inbox-format.md](references/inbox-format.md), and say they're there for `/work-retro-apply` in the workbench.
+- **Dotfiles fixes** are never applied from here: they belong in the dotfiles repo, not this one. Append the kept ones to `~/work-work/retros/inbox.md` in the format in [inbox-format.md](references/inbox-format.md), and say they're there for `/work-retro-apply` in the dotfiles repo.

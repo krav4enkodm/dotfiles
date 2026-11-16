@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Roll this workbench out onto the local machine.
+# Roll these dotfiles out onto the local machine.
 #
 #   ./install.sh           apply: copy files, merge settings, install plugins
 #   ./install.sh --check   show what would change, touch nothing (exit 1 on drift)
