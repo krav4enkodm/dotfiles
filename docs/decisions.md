@@ -1,6 +1,6 @@
 # Decisions
 
-Why the workbench is built the way it is. For using it, see the [README](../README.md).
+Why the dotfiles repo is built the way it is. For using it, see the [README](../README.md).
 
 ## Copy and merge, not symlink
 
@@ -60,7 +60,7 @@ Re-running it is safe.
   works here: `permissionMode` is overridden in auto mode, and
   `disallowedTools: Bash(...)` removes Bash entirely.
 
-This is also why the workbench isn't a plugin: plugin subagents ignore
+This is also why the dotfiles repo isn't a plugin: plugin subagents ignore
 `hooks`, `permissionMode` and `mcpServers` in their frontmatter.
 
 ## What is deliberately not here
