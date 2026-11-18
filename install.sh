@@ -237,7 +237,7 @@ BASHRC="$HOME/.bashrc"
 # shellcheck disable=SC2016
 SOURCE_LINE='[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/bashrc.sh" ] && . "${XDG_CONFIG_HOME:-$HOME/.config}/dotfiles/bashrc.sh"'
 if grep -qF 'dotfiles/bashrc.sh' "$BASHRC" 2>/dev/null; then
-  ok "~/.bashrc sources dotfiles/bashrc.sh"
+  ok ".bashrc sources dotfiles/bashrc.sh"
 else
   act add "source line to ~/.bashrc"
   if [ "$CHECK" != 1 ]; then
