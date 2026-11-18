@@ -1,0 +1,6 @@
+# Ghostty. Run `ghostty +show-config --default --docs` for every option.
+theme = Catppuccin Macchiato
+font-family = JetBrainsMono Nerd Font
+
+# Selecting text copies it to the system clipboard too, not only the primary selection.
+copy-on-select = clipboard

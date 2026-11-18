@@ -1,12 +1,14 @@
 # dotfiles
 
-My portable Claude Code setup. `claude/` mirrors `~/.claude/`, and `install.sh`
-copies and merges it onto the machine. See README.md for the file map and
+My portable setup. `claude/` mirrors `~/.claude/` and `config/` mirrors
+`~/.config/`; `install.sh` copies and merges both onto the machine. Package
+installs per distro live in docs/setup.md; keep it in step when a tool in
+`config/` is added or dropped. See README.md for the file map and
 docs/decisions.md for how the installer works and what is deliberately left out.
 
 ## Rules
 
-- **The repo is the source of truth.** Edit files here, never under `~/.claude/`,
+- **The repo is the source of truth.** Edit files here, never under `~/.claude/` or `~/.config/`,
   then run `./install.sh`. Run `./install.sh --check` first: if it reports drift,
   ask whether to copy the live change back into the repo before installing over it.
 - **Keep it publishable.** No employer internals anywhere, including commit

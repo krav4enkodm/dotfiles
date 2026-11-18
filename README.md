@@ -1,7 +1,10 @@
 # dotfiles
 
-My portable Claude Code setup: skills, agents, settings, and the bits that don't
-come back on their own after a fresh install.
+My portable setup: the Claude Code harness (skills, agents, settings) and the
+terminal around it (Ghostty, herdr, Starship, btop, LazyVim, bash), themed
+Catppuccin Macchiato. On a new machine, start with
+[docs/setup.md](docs/setup.md): packages for Arch and Debian/Ubuntu, then this
+installer.
 
 ```sh
 git clone https://github.com/krav4enkodm/dotfiles ~/Projects/dotfiles
@@ -34,6 +37,10 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `claude/settings.json` | `~/.claude/settings.json` | merged; model, permissions and deny rules, hooks, status line, plugins, Remote Control on for every session |
 | `claude/settings-removed.json` | `~/.claude/settings.json` | keys (dotted paths) deleted after the merge |
 | `claude/mcp-servers.json` | `~/.claude.json` → `mcpServers` | merged |
+| `config/*` | `~/.config/*` | copied: Ghostty, Starship, herdr, the btop theme, LazyVim's colorscheme, `dotfiles/bashrc.sh` |
+| `config/btop/btop.conf` | `~/.config/btop/btop.conf` | only these keys set; btop rewrites the file itself |
+| `config/nvim/lazyvim.json` | `~/.config/nvim/lazyvim.json` | extras added; LazyVim starter cloned first if `~/.config/nvim` is missing |
+| — | `~/.bashrc` | one line added that sources `~/.config/dotfiles/bashrc.sh` |
 
 ## Skills
 
