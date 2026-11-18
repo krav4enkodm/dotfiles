@@ -17,9 +17,10 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
 7. **Runtime constraints.** Where does the code run? Dependencies available there, network reachability, firewall/WAF rules, timeouts, resource limits.
 8. **Verification path.** Can the stated "done when" actually be checked in the stated environment? Some flows only run in production.
 9. **Library behaviour.** For every framework behaviour the ticket relies on (ordering, defaults, headers, query params), check the installed source and version.
-10. **Clarity.** Could someone new implement it without asking? Ambiguous verbs ("handle", "support"), unnamed files, two tickets that both seem to own a part.
+10. **Clarity.** Could someone new implement it without asking? Ambiguous verbs ("handle", "support"), unnamed files, two tickets that both seem to own a part, a first line that contradicts Scope.
 11. **Design (UI tickets).** Run the planning checks in [design.md](design.md).
-12. **Bug (bug tickets).** The steps reproduce it on the current code, or the failing path is found in the code. The root cause is named, or is a question. The regression test can reach that path the way the repo's existing tests do.
+12. **Smallest change.** For each change the Scope prescribes: which Done-when item needs it, and would a reviewer ask "is this necessary?" Cut what nothing needs, and replace a prescribed structure with the outcome when simpler code would meet it. A port adapts the source to this repo's components and tokens; it doesn't copy the source's markup and classes.
+13. **Bug (bug tickets).** The steps reproduce it on the current code, or the failing path is found in the code. The root cause is named, or is a question. The regression test can reach that path the way the repo's existing tests do.
 
 ## Cross-ticket
 
