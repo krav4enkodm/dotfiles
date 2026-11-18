@@ -26,8 +26,15 @@ those edits, and the next `./install.sh` overwrites them after backing them up.
    it in `settings-removed.json`, which the installer deletes after the merge.
    Each machine may keep its own additions (extra plugins, MCP servers), so
    `--check` only reports where the machine differs from what the repo sets.
-4. **Sets up integrations:** herdr's Claude integration, the `gh stack` extension
-   (`github/gh-stack`), plugin marketplaces and the enabled plugins, through
+4. **Copies `config/` into `~/.config/`** the same way, with its own manifest at
+   `~/.config/dotfiles/.manifest`. Two files are merged, not copied, because
+   their tools rewrite them: `btop.conf` (only the repo's `key = value` lines are
+   set) and LazyVim's `lazyvim.json` (the repo's extras are added; extras turned
+   on locally stay). Shell setup lives in `~/.config/dotfiles/bashrc.sh`, and
+   `~/.bashrc` gets one line that sources it, so whatever else installers append
+   to `~/.bashrc` keeps working.
+5. **Sets up integrations:** herdr's Claude integration, the `gh stack` extension
+   (`github/gh-stack`), herdr's worktree-setup plugin, plugin marketplaces and the enabled plugins, through
    `herdr integration`, `gh extension` and `claude plugin`.
 
 Hook scripts are managed one file at a time, because herdr keeps its own
@@ -82,8 +89,15 @@ This is also why the dotfiles repo isn't a plugin: plugin subagents ignore
   unversioned in `~/.claude/skills/`.
 - **Repo-scoped skills.** Skills under a project's own `.claude/skills/` travel
   with that clone.
-- **Shell dotfiles and toolchain.** Out of scope for now: this repo covers the
-  Claude harness only.
+- **Packages.** The installer lays down configs, not software: installing
+  differs per distro and needs root, so [setup.md](setup.md) lists the commands
+  instead. `install.sh` only warns when a tool is missing.
+- **Configs I haven't changed from the defaults.** lazygit, LazyVim's own
+  options and keymaps, and the rest of btop's settings stay stock, so there's
+  nothing to carry. A file goes into `config/` only once it differs from what
+  the tool ships with.
+- **The desktop.** The window manager, desktop shell, login screen and drivers
+  are tied to the hardware and change more often than the terminal setup.
 
 ## Keep it publishable
 

@@ -1,0 +1,9 @@
+onboarding = false
+
+[ui.toast]
+delivery = "herdr"
+
+# herdr has no Catppuccin Macchiato; Mocha is the closest built-in.
+[theme]
+name = "catppuccin-mocha"
+auto_switch = false

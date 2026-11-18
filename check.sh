@@ -41,7 +41,7 @@ fi
 # ------------------------------------------------------------------------ json
 echo
 echo "JSON"
-for f in claude/*.json; do
+for f in claude/*.json config/nvim/lazyvim.json; do
   if jq empty "$f" 2>/dev/null; then ok "$f"; else fail "$f does not parse"; fi
 done
 # A key can't be both installed and removed.
