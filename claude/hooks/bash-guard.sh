@@ -4,7 +4,8 @@
 #
 #   bash-guard.sh session    every session: no commits on the default branch,
 #                            no PRs created as ready for review
-#   bash-guard.sh reviewer   readiness-reviewer: read-only commands only
+#   bash-guard.sh reviewer   readiness-reviewer, rules-reviewer: read-only
+#                            commands only
 #   bash-guard.sh validator  ticket-validator: run anything except commands
 #                            that change git state or touch GitHub
 #
