@@ -6,7 +6,7 @@ The orchestrator fills this in and writes it to `~/work-work/<repo>/<ticket-id>/
 # <ticket-id>: <title>
 
 You are implementing one ticket in this worktree: <worktree path>
-Branch: <branch>, based on <base>. Another session coordinates you and validates your work against the ticket.
+Branch: <branch>, based on <base>. Another session coordinates you and has your work checked against the ticket and against the repo's coding rules.
 
 ## Ticket
 
@@ -41,7 +41,7 @@ If something needs a decision the ticket and code don't answer, don't guess. Wri
 ## Finish (only when the coordinator tells you validation passed)
 
 1. With a shared slot, the coordinator sends this step only when the app is yours, so don't ask for it again. If the change is user-visible, record demo media with <demo tooling> from the app running locally against the shared non-production environment (see "Running the app"), showing the real flow end to end. A Storybook or component-test recording is not a demo. Use that environment's existing data only; don't create or change records. Stop the app afterwards. Save the media to `<workspace>/media/` and never commit it.
-2. Open the PR with the `open-pr` skill against `<base>`. It creates a draft, handles stacks, and attaches the media you pass it: give it the demo video and any screenshots that show the change. Put the validator's verdict table in the description's testing section, and list design rows the validator couldn't check in the running app as not independently checked. If the repo's template has no section like that, add it at the end under a "Validation" heading. List the ticket's Setup checklist (secrets, infra, flags, backfills) and any manual checks in a named environment in the notes section as still to do; never perform them yourself.
+2. Open the PR with the `open-pr` skill against `<base>`. It creates a draft, handles stacks, and attaches the media you pass it: give it the demo video and any screenshots that show the change. Put the validator's verdict table in the description's testing section, and list design rows the validator couldn't check in the running app as not independently checked. If the coordinator passed on notes from the rules reviewer, list them in the notes section as open for review. If the repo's template has no section like that, add it at the end under a "Validation" heading. List the ticket's Setup checklist (secrets, infra, flags, backfills) and any manual checks in a named environment in the notes section as still to do; never perform them yourself.
 3. Append the PR link and the media paths to `report.md`, then end your turn with `WORK-WORK: DONE`.
 
 ## Rebase (only when the coordinator asks)

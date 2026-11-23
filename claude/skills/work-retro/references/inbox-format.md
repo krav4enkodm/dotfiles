@@ -7,7 +7,7 @@ One section per ticket retro, appended at the end:
 ```markdown
 ## <repo> <ticket-id> · <YYYY-MM-DD> · <PR url>
 
-- Bucket: <Ticket: missing | Ticket: unclear | Worker | Validator | Coordinator | Setup>
+- Bucket: <Ticket: missing | Ticket: unclear | Worker | Validator | Rules reviewer | Coordinator | Setup>
   Quote: «<the user's words or the review comment>»
   Ticket line: «<for Ticket: unclear, the ticket text that was misread>»
   Missing: <what the setup should have known>
