@@ -27,6 +27,7 @@ Pull every node and check:
 - Every element the Scope adds or changes has a node, and every node exists and shows that element.
 - A node drawn in a non-resting state (the context reports `active`, `hover`, `selected`, `open`, or a variant name says so) is a **question** unless the ticket already says what the element looks like at rest.
 - Elements on screen today that the mockup omits are a **question** unless the ticket says whether they stay.
+- Every element that shows data (an avatar, a date, a count) names the field that feeds it. A field that doesn't exist yet is in some ticket's Scope, or it's a gap.
 - A component whose default differs from the design gets the prop named in the ticket.
 - The section copies no values; if it does, replace them with the node ID.
 

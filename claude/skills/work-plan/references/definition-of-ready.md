@@ -6,6 +6,7 @@ A ticket is ready when all of these hold:
 
 - [ ] **One clear outcome.** The title names it; the first line says its wave and blockers (e.g. "Wave 2 · blocked by PROJ-12").
 - [ ] **Scope is concrete.** Names the files, modules, fields, endpoints, or config it changes. A new data model lists every field with type and required/optional.
+- [ ] **Scope says what, not how.** Each listed change names the requirement it serves; a change no requirement needs is cut. Code shape (types, wrappers, abstractions, timeouts, caching) is prescribed only where the codebase forces it; otherwise the worker picks the simplest code that meets Done when.
 - [ ] **Out of scope is explicit**, naming which sibling ticket owns each excluded part.
 - [ ] **Safe to ship alone.** Merging and deploying it without the tickets above it breaks nothing and exposes nothing.
 - [ ] **No open questions**, or each remaining one is explicitly deferred with a default.

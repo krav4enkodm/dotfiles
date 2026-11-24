@@ -24,15 +24,18 @@ The ticket is `<workspace>/ticket.md`. Read it first: it is the contract you're 
 ## How to work
 
 1. Read the repo's agent instructions (CLAUDE.md, AGENTS.md, rule files) before you write code, including any constraints on running things locally.
+   Read and search files by absolute path, not after a `cd`: permission rules can't resolve a `cd` target and block the read.
    Other workers run in parallel worktrees. Follow the app rule above, and in the shared browser open your own tab and work only in tabs you opened.
 2. Turn each "Done when" item into a test that fails first, where it can be tested automatically. Then implement until those tests pass.
 3. Stay inside the ticket's Scope. Anything in "Out of scope" belongs to another ticket, even if fixing it looks easy.
+   Before adding a hook, helper or component, search the repo for one that already does the job and reuse it.
 4. Run the checks listed above until they pass.
 5. **Design check** (only if the ticket has a Design section): follow "Building" in `~/.claude/skills/work-plan/references/design.md`. Take values from the design, never from memory or the ticket text.
 6. Commit on this branch with the `commit` skill if it's installed, otherwise following the repo's commit conventions. Don't push yet.
 7. Write `<workspace>/report.md`:
    - each "Done when" item, and how it's met (test name or `path:line`);
    - decisions you made that the ticket didn't specify;
+   - each new hook, helper or component, and why no existing one fit;
    - anything you couldn't do, and why.
 8. End your turn with the line `WORK-WORK: DONE`.
 

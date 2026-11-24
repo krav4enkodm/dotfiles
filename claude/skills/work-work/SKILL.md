@@ -58,7 +58,7 @@ Steps 1–3 prepare the run. Steps 4–10 run per ticket, and each ticket moves 
    - Check each remaining ticket against the Definition of Ready. If it's not ready, leave it out and name the missing parts; the tickets that depend on it are left out too.
    - A blocker outside the run must already be merged. If it isn't, leave the ticket out and say which blocker it waits for.
 2. **Work out the start gates** from the links (see [Start gates](#start-gates)), and write `batch.md`. For ticket ids not from one plan, compare the Scope sections of tickets that would run at the same time. If two change the same files, or one's "Done when" relies on another's change, ask the user: run them in sequence (recommended; the second gets a blocked-by on the first), or in parallel and accept a merge conflict on the later PR. A plan from `work-plan` has already been checked for this.
-3. **Discover the project specifics** from the table above, including [Dev servers](#dev-servers). Put the check commands in each brief; the validators get the same list. For a UI ticket, also put "Running the app" and "Design tool" in its brief, and make sure browser automation can get a session before any worker needs it, so a login prompt doesn't block it halfway.
+3. **Discover the project specifics** from the table above, including [Dev servers](#dev-servers). Put the check commands in each brief; the validators get the same list. For a UI ticket, also put "Running the app" and "Design tool" in its brief. Before starting any UI worker, check the environment once and ask the user for everything missing in one message: the browser automation answers, its session is logged in, the app serves a page, and a production build passes if a Done-when item needs one. Check the browser and session again before handing out the app slot: it may have closed since, and a worker that finds it down halfway is blocked.
 4. **Re-check and create the worktree** for each ticket whose gate is open. Re-check its code claims if the code moved since planning: it starts on a blocker's branch, or `git log <base> --since=<ticket last updated> -- <paths in its Scope>` shows commits. Run the `readiness-reviewer` in single mode against the base, in parallel across tickets. Apply what it resolves from the code as amendments, ask the user its questions, and stop the ticket if it finds a blocker the user doesn't resolve. Then: `herdr worktree create --cwd <repo> --branch <branch> --base <base> --label "<ticket-id> <title>" --no-focus`. Read the workspace and pane IDs from the JSON response; never guess them. For any other herdr command, check `herdr <group>` for syntax first.
 5. **Start the worker:** `herdr agent start <ticket-id-lowercase> --kind claude --pane <root pane> -- --name "<ticket-id> <title>"`. The name is what the session is listed as in Remote Control on the phone and web. Write `brief.md` from [worker-brief.md](references/worker-brief.md), then send `herdr agent prompt <name> "Read <path>/brief.md and follow it."`. Start every ticket whose gate is open before waiting on any of them.
 6. **Wait for the workers.** Run one `herdr agent wait <name>` per worker in the background (Bash `run_in_background`), so you're notified as each one finishes. On each notification, re-read `batch.md`, then the last lines of that worker's pane and its `report.md`:
@@ -67,7 +67,7 @@ Steps 1–3 prepare the run. Steps 4–10 run per ticket, and each ticket moves 
    - `WORK-WORK: BLOCKED` → show the user the question exactly as written, prefixed with the ticket id, with a herdr notification (`--sound request`). Ask about one ticket at a time, oldest first. Write the answer into `ticket.md` as an amendment, then send the worker the answer, tell it `ticket.md` changed, and wait again. If the answer changes the plan itself, see [Changing the plan mid-run](#changing-the-plan-mid-run).
    - **Idle with no marker, or blocked on a permission prompt** → read the pane, tell the user which ticket it is and what it's waiting on, and don't answer approval dialogs for them.
 
-   Update `batch.md` after every transition.
+   Update `batch.md` after every transition, and post its table in a few lines (ticket, state, PR), so the user never has to ask how it's going.
 7. **Validate.** Start two independent agents in the background, side by side, and give neither of them anything the worker wrote: no report, no summary.
    - **`ticket-validator`**: does the branch implement the ticket? Give it the current text of `ticket.md`, the worktree path, the base ref and the check commands. For a UI ticket, add the design tool and file key, and how to reach the ticket's running app (see [Dev servers](#dev-servers)). It pulls the design and measures the running app itself. Validators for non-UI tickets run side by side; UI validators take turns, because they share this session's browser.
    - **`rules-reviewer`**: does the changed code follow the coding rules that apply to it (the user's and the repo's CLAUDE.md, AGENTS.md and rule files)? Give it the worktree path, the base ref, and the ticket's Scope and Out of scope. Not the list of rules: it finds them from the changed files itself. It needs no browser, so it never waits for the app slot.
@@ -84,7 +84,7 @@ Steps 1–3 prepare the run. Steps 4–10 run per ticket, and each ticket moves 
 
     If tickets are still waiting on merges when everything else is done, say which merges they wait for, and leave the merge watch running.
 
-Leave the worktrees and the workers running. The user reviews the PRs and iterates through the worker panes. Once a ticket's PR merges, `/work-retro` in its worker pane looks back at where the user had to step in.
+Leave the worktrees and the workers running. The user reviews the PRs and iterates through the worker panes.
 
 ## Running a plan
 
@@ -155,7 +155,7 @@ An amendment is any decision made after planning: an answer to a BLOCKED questio
 ## Rules
 
 - **Never answer an approval dialog or a question for the user.** Relay it exactly as it appears, with its ticket id.
-- **Start every message to a worker with `Coordinator:`**, except the first one ("Read <path>/brief.md and follow it."). herdr types into the same pane as the user, so this is how `work-retro` tells the run's messages from the user's.
+- **Start every message to a worker with `Coordinator:`**, except the first one ("Read <path>/brief.md and follow it."). herdr types into the same pane as the user, so this is how the pane's history tells the run's messages from the user's.
 - **Writing amendments back is the only ticket edit**, besides the plan changes the user approves. No status, assignee or priority changes unless the repo's ticket skill says to.
 - **Never merge a PR or mark it ready.** Merges are the user's; the run waits for them.
 - **Never close a worktree, pane or workspace.** Cleanup after merge is the user's call.

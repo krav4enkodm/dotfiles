@@ -50,15 +50,6 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `work-plan` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase, and links them into waves so as much as possible can be built in parallel. Works with Linear, Jira, GitHub Issues or markdown files. | `readiness-reviewer` agent |
 | `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked by an independent validator against its ticket and by an independent reviewer against the coding rules, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` and `rules-reviewer` agents, herdr |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
-| `work-retro` | Runs only as `/work-retro`, in a ticket's worker pane after its PR merges. Finds every point where you had to step in (pane messages, decisions added to `ticket.md`, PR review comments) and proposes the fix that would have made it unnecessary. Project fixes are applied in place; dotfiles fixes go to a local inbox. | `work-work` (`worker-brief.md`, `ticket.md` amendments), `work-plan` (`definition-of-ready.md`, `review-checklist.md`, `design.md`), `jq` |
-
-## Repo-only skills
-
-These live in `.claude/skills/` and load only in sessions opened in this repo. The installer doesn't copy them.
-
-| Skill | What it does |
-|---|---|
-| `work-retro-apply` | Runs only as `/work-retro-apply`. Reads the inbox `work-retro` fills, groups findings across tickets, flags any that came back after an earlier fix, and turns the picked ones into one draft PR in generic wording. |
 
 ## Agents
 
@@ -101,8 +92,6 @@ skills and agents listed above.
 /work-plan  →  drafts → dependency graph + waves → readiness review (max 3 rounds) → tickets + wave table in the tracker
 /work-work  →  per ticket, once its blockers pass (or merge, for 2+): ticket.md → herdr worktree → worker Claude → validator + rules reviewer → draft PR + demo media
 you         →  review and merge the draft PRs; iterate in the worker panes or via PR comments
-/work-retro →  in the merged ticket's pane: where you stepped in → project fixes now, dotfiles fixes to ~/work-work/retros/inbox.md
-/work-retro-apply → in the dotfiles repo: inbox → grouped findings → one draft PR here
 ```
 
 Fixed assumptions: Claude Code, [herdr](https://herdr.dev) (`work-work` runs inside it),
