@@ -51,14 +51,6 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked by an independent validator, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` agent, herdr |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
 
-## Repo-only skills
-
-These live in `.claude/skills/` and load only in sessions opened in this repo. The installer doesn't copy them.
-
-| Skill | What it does |
-|---|---|
-| `work-retro` | Runs only as `/work-retro`. Finds the tickets `work-work` shipped whose PRs merged since the last retro, reads your conversations with the coordinator and each worker plus the PR review comments, and traces every point where you stepped in to planning, the ticket, or the implementation (worker, validator, coordinator). Groups the causes across tickets, flags any that came back after an earlier fix, and turns the picked fixes into one draft PR in generic wording. Fixes for a project's own instructions are listed for you to apply there. |
-
 ## Agents
 
 | Agent | Used by | What it does | Depends on |
@@ -99,7 +91,6 @@ skills and agents listed above.
 /work-plan  →  drafts → dependency graph + waves → readiness review (max 3 rounds) → tickets + wave table in the tracker
 /work-work  →  per ticket, once its blockers pass (or merge, for 2+): ticket.md → herdr worktree → worker Claude → validator → draft PR + demo media
 you         →  review and merge the draft PRs; iterate in the worker panes or via PR comments
-/work-retro →  in the dotfiles repo, whenever: tickets merged since the last retro → where you stepped in, traced to ticket or implementation → one draft PR here
 ```
 
 Fixed assumptions: Claude Code, [herdr](https://herdr.dev) (`work-work` runs inside it),
