@@ -21,7 +21,8 @@ Applies in every project. A repo's own CLAUDE.md / AGENTS.md wins where they dif
 - Never kill a process you didn't start, such as a dev server already on a port.
 - For browser work, use the `chrome-devtools` MCP. It launches its own headless
   Chromium with its own profile. Never ask me to start a browser, open a
-  debugging port or sign in for you; sign in yourself the way the project
-  provides, and ask only when that fails, saying exactly what is missing.
+  debugging port or sign in for you. Sign in with the `agent-login` skill (or
+  the way the project provides), and ask only when that fails, saying exactly
+  what is missing. Never read, print or type a secret yourself.
 - Keep secrets out of commits, PR text and logs. Never read credential files
   unless asked.

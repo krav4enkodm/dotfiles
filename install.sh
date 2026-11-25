@@ -54,6 +54,7 @@ if has gh; then
   gh auth status >/dev/null 2>&1 && ok "gh auth" || warn "gh not logged in — run: gh auth login"
 fi
 has avr && ok "avr" || warn "avr not found (optional, for demo videos)"
+has op && ok "op" || warn "op not found (optional, 1Password CLI for the agent-login skill)"
 [ -x /usr/bin/chromium ] && ok "chromium" || warn "/usr/bin/chromium not found — the chrome-devtools MCP launches it; see docs/setup.md"
 for cmd in ghostty starship btop nvim; do
   has "$cmd" && ok "$cmd" || warn "$cmd not found — its config is installed anyway; see docs/setup.md"

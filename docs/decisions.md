@@ -79,6 +79,16 @@ and uses the MCP's default profile (`~/.cache/chrome-devtools-mcp/`), so
 sign-ins persist between sessions and my own browser is never involved. The
 `chrome-devtools` allow rule lets it work without a prompt per click.
 
+Signing that browser in to an app is the `agent-login` skill. Credentials stay
+in 1Password: a per-app env file in `~/.config/agent-login/` holds only
+`op://` references, and `op run` resolves them into the environment of one
+script, which types them into the login form over the debugging port. Claude
+never sees the values, so they can't leak into transcripts, and nothing secret
+sits on disk. The env files stay out of the repo because vault and item names
+are personal. The cost of the port (`--remote-debugging-port=9333`) is that any
+local process can drive the signed-in browser while it runs; it listens on
+localhost only and closes with the MCP.
+
 ## What is deliberately not here
 
 - **Plugin code.** Claude Code installs and updates plugins itself. `settings.json`

@@ -50,6 +50,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `work-plan` | Turns an idea or rough ticket into tickets that meet a Definition of Ready, grounded in the codebase, and links them into waves so as much as possible can be built in parallel. Works with Linear, Jira, GitHub Issues or markdown files. | `readiness-reviewer` agent |
 | `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked by an independent validator against its ticket and by an independent reviewer against the coding rules, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` and `rules-reviewer` agents, herdr |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
+| `agent-login` | Signs Claude's browser in to a web app with a username and password from 1Password: `op run` hands them to a script that types them into the login form, so they never enter the conversation. One env file of `op://` references per app in `~/.config/agent-login/`. | `chrome-devtools` MCP (debugging port 9333), 1Password CLI |
 
 ## Agents
 

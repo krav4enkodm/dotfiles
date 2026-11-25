@@ -68,6 +68,11 @@ curl -fsSL https://claude.ai/install.sh | bash     # Claude Code, into ~/.local/
 curl -fsSL https://herdr.dev/install.sh | sh       # herdr; updates itself with `herdr update`
 ```
 
+For the `agent-login` skill, install the 1Password CLI (`op`) from
+[its guide](https://developer.1password.com/docs/cli/get-started/) and turn on
+**Settings → Developer → Integrate with 1Password CLI** in the desktop app, so
+`op` asks for approval there instead of a separate sign-in.
+
 Then, in a new shell: `nvm install --lts`, and on Debian/Ubuntu also
 `npm i -g tree-sitter-cli` (LazyVim uses it to build parsers).
 
