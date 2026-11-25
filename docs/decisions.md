@@ -70,6 +70,15 @@ Re-running it is safe.
 This is also why the dotfiles repo isn't a plugin: plugin subagents ignore
 `hooks`, `permissionMode` and `mcpServers` in their frontmatter.
 
+## Claude's browser
+
+The `chrome-devtools` MCP launches its own Chromium instead of attaching to
+one on a debugging port, which meant starting a browser by hand before every
+browser task. It runs headless, so it never takes focus from what I'm doing,
+and uses the MCP's default profile (`~/.cache/chrome-devtools-mcp/`), so
+sign-ins persist between sessions and my own browser is never involved. The
+`chrome-devtools` allow rule lets it work without a prompt per click.
+
 ## What is deliberately not here
 
 - **Plugin code.** Claude Code installs and updates plugins itself. `settings.json`

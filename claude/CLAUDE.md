@@ -19,5 +19,9 @@ Applies in every project. A repo's own CLAUDE.md / AGENTS.md wins where they dif
 - Discover the repo's check commands (tests, lint, typecheck) from its docs and
   task runner, and run them before saying a change is done.
 - Never kill a process you didn't start, such as a dev server already on a port.
+- For browser work, use the `chrome-devtools` MCP. It launches its own headless
+  Chromium with its own profile. Never ask me to start a browser, open a
+  debugging port or sign in for you; sign in yourself the way the project
+  provides, and ask only when that fails, saying exactly what is missing.
 - Keep secrets out of commits, PR text and logs. Never read credential files
   unless asked.

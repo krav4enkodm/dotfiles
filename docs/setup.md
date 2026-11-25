@@ -17,7 +17,7 @@ Everything is in the official repos.
 ```sh
 sudo pacman -S --needed base-devel git jq curl unzip wl-clipboard \
   ghostty starship btop neovim tree-sitter-cli lazygit \
-  fzf ripgrep fd github-cli ttf-jetbrains-mono-nerd nvm
+  fzf ripgrep fd github-cli ttf-jetbrains-mono-nerd nvm chromium
 ```
 
 ### Debian / Ubuntu
@@ -26,9 +26,14 @@ apt covers the small tools. Ghostty, Starship, Neovim and lazygit come from
 their own releases, because the apt versions are missing or too old (LazyVim
 needs Neovim 0.11.2 or newer).
 
+Chromium is for Claude's browser (the `chrome-devtools` MCP launches
+`/usr/bin/chromium`). Debian's apt package installs it there. Ubuntu's
+`chromium` is a snap, which lives in `/snap/bin` and can't write the agent's
+profile under `~/.cache`, so on Ubuntu install a non-snap build at that path.
+
 ```sh
 sudo apt install build-essential git jq curl unzip fontconfig wl-clipboard \
-  btop fzf ripgrep fd-find gh
+  btop fzf ripgrep fd-find gh chromium
 mkdir -p ~/.local/bin && ln -sf "$(command -v fdfind)" ~/.local/bin/fd   # Debian names it fdfind
 
 # Starship
