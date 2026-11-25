@@ -1,6 +1,9 @@
 {
   "permissions": {
     "defaultMode": "auto",
+    "allow": [
+      "mcp__chrome-devtools"
+    ],
     "deny": [
       "Bash(gh pr merge *)",
       "Bash(gh pr ready *)",
