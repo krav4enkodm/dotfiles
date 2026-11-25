@@ -1,0 +1,12 @@
+{
+  "slug": "team-members",
+  "size": "feature",
+  "created": "2026-01-01T00:00:00.000Z",
+  "repos": [
+    { "name": "web", "path": "/tmp/web" },
+    { "name": "api", "path": "/tmp/api" }
+  ],
+  "design": "files",
+  "phases": ["recon", "brief", "contracts", "split", "review"],
+  "stamps": {}
+}

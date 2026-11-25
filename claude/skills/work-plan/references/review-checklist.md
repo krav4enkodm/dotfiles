@@ -32,6 +32,7 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
 6. **Contracts come first.** A contract two parallel tickets share (API shape, type, schema field) lives in a ticket in an earlier wave, not written separately into each.
 7. **Fan-in is rare and late.** A ticket with two or more blockers waits for all but one of them to merge. Flag any that sit early in the plan or could lose a blocker with a different cut.
 8. **Waves are as wide as the code allows.** Flag blockers that are only order, and long chains that a different cut would run side by side.
+9. **One contract, one text.** Tickets in different repos that cover the same contract quote it identically: names, types, required fields, error shapes.
 
 ## Traps seen before
 

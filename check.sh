@@ -10,6 +10,7 @@
 #   has a paths: list, and every hook script is executable
 # - README's Skills, Agents and Rules tables list exactly what's in claude/
 # - links and ~/.claude/... paths inside claude/ point at files that exist
+# - work-plan's plan.mjs passes its tests (skipped with a warning without node)
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -125,6 +126,15 @@ while IFS= read -r f; do
   done < <(grep -oE '~/\.claude/(skills|agents)/[A-Za-z0-9_./-]+[A-Za-z0-9_]' "$f" || true)
 done < <(find claude -name '*.md' | sort)
 [ "$broken" = 0 ] && ok "all links resolve"
+
+# ------------------------------------------------------------------ plan.mjs
+echo
+echo "work-plan script"
+if command -v node >/dev/null 2>&1; then
+  if out="$(tests/work-plan/run.sh 2>&1)"; then ok "tests/work-plan/run.sh"; else fail "tests/work-plan/run.sh"; printf '%s\n' "$out" | sed 's/^/        /'; fi
+else
+  warn "node not installed — skipped (CI runs it)"
+fi
 
 # ------------------------------------------------------------------------ done
 echo

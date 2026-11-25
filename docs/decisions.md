@@ -70,6 +70,35 @@ Re-running it is safe.
 This is also why the dotfiles repo isn't a plugin: plugin subagents ignore
 `hooks`, `permissionMode` and `mcpServers` in their frontmatter.
 
+## work-plan is a coordinator with phases
+
+`work-plan` used to be one skill that sized, drafted, reviewed and asked in a
+single context. Two things went wrong with that: on bigger work the context
+filled up before the split, and the agent cut tickets from whatever it had
+understood, so a misunderstanding only showed in the tickets. Now:
+
+- **Phases are separate skills with `context: fork`.** Each starts clean and
+  reads the plan folder, so the coordinator's context holds only summaries and
+  a plan survives `/clear`. They're `user-invocable: false`: the user types one
+  command.
+- **Only the coordinator asks.** A forked skill can't hold a conversation with
+  the user, and questions spread over five contexts are hard to follow. Phases
+  write `questions.md` and return; the coordinator asks and re-runs the phase
+  to apply the answers.
+- **Understanding is approved before splitting.** The brief (Example Mapping:
+  rules, Given/When/Then examples, open questions) and the contracts each get
+  a gate. Contracts come before tickets because they are what make parallel
+  tickets possible.
+- **Gates and checks are a script**, `work-plan/scripts/plan.mjs`, for the
+  same reason guardrails are hooks: prose is a request. It stamps each phase
+  with a hash of its inputs, so editing a file by hand makes exactly the later
+  phases stale, like make; and it checks waves, cycles, overlap inside a wave
+  and that every brief, inventory and contract item is owned by a ticket.
+  `tests/work-plan/run.sh` tests it from `check.sh`.
+- **Plans live in `~/work-work/plans/<slug>/`**, not under one repo, because a
+  plan can span a frontend and its API. `work-work` still runs per repo and
+  picks its rows from the wave table's Repo column.
+
 ## Claude's browser
 
 The `chrome-devtools` MCP launches its own Chromium instead of attaching to
