@@ -9,7 +9,8 @@
       "--executablePath",
       "/usr/bin/chromium",
       "--viewport",
-      "1440x900"
+      "1440x900",
+      "--chromeArg=--remote-debugging-port=9333"
     ],
     "env": {}
   }
