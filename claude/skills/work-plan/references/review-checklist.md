@@ -28,7 +28,7 @@ Used by the inline review and by the `readiness-reviewer` agent. For each findin
 2. **Scope coverage.** Every part of the goal is owned by exactly one ticket; nothing is orphaned or duplicated.
 3. **Dependency links** match real needs and have no cycles; each wave, shipped on top of the waves before it, is safe on its own. Each ticket's first line and the wave table agree with the links.
 4. **Shared decisions** are reflected the same way in every ticket that depends on them.
-5. **No overlap inside a wave.** List the files each ticket in a wave changes. If two share a file, move the shared change into an earlier ticket, or block one on the other.
+5. **Scope names every file the ticket will change.** `plan.mjs check` already catches overlap between the files Scopes list; it can't see a file a ticket will have to change that its Scope leaves out. For each ticket, find those in the code (a route table, a registry, an index or barrel file, a shared fixture, a migration list) and add them to Scope. If that makes two tickets in a wave share a file, move the shared change into an earlier ticket, or block one on the other.
 6. **Contracts come first.** A contract two parallel tickets share (API shape, type, schema field) lives in a ticket in an earlier wave, not written separately into each.
 7. **Fan-in is rare and late.** A ticket with two or more blockers waits for all but one of them to merge. Flag any that sit early in the plan or could lose a blocker with a different cut.
 8. **Waves are as wide as the code allows.** Flag blockers that are only order, and long chains that a different cut would run side by side.
