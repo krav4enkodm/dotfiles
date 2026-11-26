@@ -53,6 +53,12 @@ Re-running it is safe.
   for particular files, scoped with `paths:` so they load only when Claude
   touches matching files. `frontend-feature-layers` was a skill and is now a rule:
   it's a convention, and a skill applies only when the model decides to load it.
+- **Review knowledge is split by cost.** What good code looks like is short
+  path-scoped rules, loaded only while Claude touches matching files. The
+  mechanical part is ESLint through `lint-guard.sh`, costing no context unless
+  something fails. The bulky part (bug patterns, what to let pass, voice) lives
+  in `work-review`'s references, loaded only when a review runs, and the rules
+  check runs in the `rules-reviewer` subagent's own context.
 - **Skills** hold procedures. A skill with side effects that should never start
   on its own (`work-work`) sets `disable-model-invocation: true`. `commit` and
   `open-pr` stay model-invocable because `work-work`'s workers call them

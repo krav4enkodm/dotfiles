@@ -54,6 +54,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `work-plan-split` | Phase of `work-plan`: cuts brief and contracts into ticket drafts and waves, until `plan.mjs check` passes. | `work-plan` (`plan-files.md`, `definition-of-ready.md`, `design.md`) |
 | `work-plan-review` | Phase of `work-plan`: one readiness-review round per run, fixing what the code settles and recording the rest as questions. | `work-plan` (`review-checklist.md`, `definition-of-ready.md`), `readiness-reviewer` agent |
 | `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked by an independent validator against its ticket and by an independent reviewer against the coding rules, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` and `rules-reviewer` agents, herdr |
+| `work-review` | Reviews a PR or the current branch the way I do (learned from ~900 of my review comments). The coding rules say what good code is and `rules-reviewer` checks them; the skill adds the reviewer's part: ticket check, consumers beyond the diff, the bugs I usually catch, what to let pass, a verdict, and a draft review in my voice. Never posts anything. | `rules-reviewer` agent, the rules below, `gh`, a tracker MCP or CLI (optional) |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
 | `agent-login` | Signs Claude's browser in to a web app with a username and password from 1Password: `op run` hands them to a script that types them into the login form, so they never enter the conversation. One env file of `op://` references per app in `~/.config/agent-login/`. | `chrome-devtools` MCP (debugging port 9333), 1Password CLI |
 
@@ -63,7 +64,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 |---|---|---|---|
 | `readiness-reviewer` | `work-plan-review` | Checks a ticket's claims against the code and returns gaps and questions. | `work-plan` (`review-checklist.md`, `definition-of-ready.md`, `design.md`), `bash-guard.sh` hook, Figma plugin |
 | `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket, the diff and the running app; returns PASS or FAIL with a gap list. | `work-plan` (`design.md`), `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP (UI tickets) |
-| `rules-reviewer` | `work-work` | Finds the CLAUDE.md, AGENTS.md and rule files that apply to a branch's changed files and checks the changed lines against them; returns PASS or FAIL with violations, plus non-blocking notes. | `bash-guard.sh` hook |
+| `rules-reviewer` | `work-work`, `work-review` | Finds the CLAUDE.md, AGENTS.md and rule files that apply to a branch's changed files and checks the changed lines against them; returns PASS or FAIL with violations, plus non-blocking notes. | `bash-guard.sh` hook |
 
 ## Rules
 
@@ -71,6 +72,23 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 |---|---|---|
 | `code-comments` | `*.ts`, `*.tsx` | No comments that narrate the code; keep directives and short "why" notes. |
 | `frontend-feature-layers` | `*.tsx`, `*.jsx` | Lay out a data-backed React feature as data / services / presentational components / thin container. |
+| `typescript-types` | `*.ts`, `*.tsx` | Types tell the truth: no fallbacks on non-nullable data, narrow instead of casting, derive from generated types, required unless a real case needs optional. |
+| `react-components` | `*.tsx`, `*.jsx` | Component contract (the parent decides rendering, no parent context inside), one source of truth, where queries go, loading and backend states, experiments built for removal. |
+| `code-clarity` | source files | Positive booleans, explicit branches, domain names, no one-caller abstractions, package boundaries, nothing left behind. |
+| `frontend-tests` | tests, stories, mocks | Right test level, cover user-facing branches, robust selectors and exact assertions, typed mocks, reasons for skips. |
+
+## Lint on stop
+
+`hooks/lint-guard.sh` makes the mechanical half of the rules a check rather
+than prose. `record` (PostToolUse on `Edit|Write`) notes each JS/TS file Claude
+writes. `check` (Stop) runs the repo's own ESLint once per turn over those
+files, adds a few core rules (no nested ternaries, no negated conditions, no
+`!!x`, no needless ternaries), and sends back only problems on the lines the
+working tree changed, so Claude fixes what it wrote and not older code. It is
+silent when clean and skips repos without a local `eslint`. It allows two fix
+rounds before letting the turn end. Turn it off with `CLAUDE_LINT_GUARD=0`.
+A run costs the repo's lint time (about 20 s on a large monorepo) and only
+happens on turns that changed JS/TS.
 
 ## Guardrails
 
