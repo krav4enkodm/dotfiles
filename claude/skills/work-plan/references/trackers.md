@@ -29,6 +29,6 @@ The skill speaks in generic terms: **container** (project / epic / milestone), *
 
 ## Rules
 
-- Creating tickets is outward-facing: confirm the plan (titles, order, container) once, before the first create, unless the user already asked you to create them.
+- Creating tickets is outward-facing: confirm the plan (titles, order, container) once, before the first create, unless the user already asked you to create them. In `work-plan`, the review gate is that confirmation.
 - Assign, prioritise, or schedule only when asked or when the repo's ticket skill says to.
 - When editing a ticket later, patch the affected section instead of resending the whole description. Trackers rewrite markdown when they save it (e.g. `-` bullets become `*`, table cells get padded), so copy patch anchors from the ticket as last returned, not from what you sent.

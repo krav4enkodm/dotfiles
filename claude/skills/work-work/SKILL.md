@@ -59,7 +59,7 @@ Steps 1–3 prepare the run. Steps 4–10 run per ticket, and each ticket moves 
    - A blocker outside the run must already be merged. If it isn't, leave the ticket out and say which blocker it waits for.
 2. **Work out the start gates** from the links (see [Start gates](#start-gates)), and write `batch.md`. For ticket ids not from one plan, compare the Scope sections of tickets that would run at the same time. If two change the same files, or one's "Done when" relies on another's change, ask the user: run them in sequence (recommended; the second gets a blocked-by on the first), or in parallel and accept a merge conflict on the later PR. A plan from `work-plan` has already been checked for this.
 3. **Discover the project specifics** from the table above, including [Dev servers](#dev-servers). Put the check commands in each brief; the validators get the same list. For a UI ticket, also put "Running the app" and "Design tool" in its brief. Before starting any UI worker, check the environment once and ask the user for everything missing in one message: the browser automation answers, its session is logged in, the app serves a page, and a production build passes if a Done-when item needs one. Check the browser and session again before handing out the app slot: it may have closed since, and a worker that finds it down halfway is blocked.
-4. **Re-check and create the worktree** for each ticket whose gate is open. Re-check its code claims if the code moved since planning: it starts on a blocker's branch, or `git log <base> --since=<ticket last updated> -- <paths in its Scope>` shows commits. Run the `readiness-reviewer` in single mode against the base, in parallel across tickets. Apply what it resolves from the code as amendments, ask the user its questions, and stop the ticket if it finds a blocker the user doesn't resolve. Then: `herdr worktree create --cwd <repo> --branch <branch> --base <base> --label "<ticket-id> <title>" --no-focus`. Read the workspace and pane IDs from the JSON response; never guess them. For any other herdr command, check `herdr <group>` for syntax first.
+4. **Re-check and create the worktree** for each ticket whose gate is open. Re-check its code claims only if the code in its Scope moved since planning: `git log <base> --since=<ticket last updated> --format=%h -- <paths in its Scope>` shows commits. On a blocker's branch that log includes the blocker's own commits, so a blocker that didn't touch these paths needs no re-check. If it shows commits, run the `readiness-reviewer` in single mode against the base, in parallel across tickets. Apply what it resolves from the code as amendments, ask the user its questions, and stop the ticket if it finds a blocker the user doesn't resolve. Then: `herdr worktree create --cwd <repo> --branch <branch> --base <base> --label "<ticket-id> <title>" --no-focus`, and record the commit it starts on (`git rev-parse <base>`) as its base commit in `batch.md`. Read the workspace and pane IDs from the JSON response; never guess them. For any other herdr command, check `herdr <group>` for syntax first.
 5. **Start the worker:** `herdr agent start <ticket-id-lowercase> --kind claude --pane <root pane> -- --name "<ticket-id> <title>"`. The name is what the session is listed as in Remote Control on the phone and web. Write `brief.md` from [worker-brief.md](references/worker-brief.md), then send `herdr agent prompt <name> "Read <path>/brief.md and follow it."`. Start every ticket whose gate is open before waiting on any of them.
 6. **Wait for the workers.** Run one `herdr agent wait <name>` per worker in the background (Bash `run_in_background`), so you're notified as each one finishes. On each notification, re-read `batch.md`, then the last lines of that worker's pane and its `report.md`:
    - `WORK-WORK: DONE` → go to step 7 for that ticket.
@@ -106,12 +106,13 @@ A chain of single-blocker tickets becomes a `gh stack` when each worker opens it
 
 ### Rebasing dependents
 
-A dependent started on its blocker's branch. When that branch changes after the dependent started, the dependent has to follow:
+A dependent started on its blocker's branch, at the base commit recorded in `batch.md`. Its own commits are always `<base commit>..<branch>`, whatever happened to the blocker since. When the blocker's branch changes:
 
-- **The blocker changed after review** (it passed validation again): tell each dependent's worker to rebase onto the updated blocker branch.
-- **The blocker merged:** tell each dependent's worker to rebase onto the default branch: `git fetch && git rebase --onto origin/<default branch> <blocker's last commit> <branch>`. Its base becomes the default branch, or the next open blocker for a fan-in ticket.
+- **The blocker only gained commits on top** (the usual case: fixes after review; `git merge-base --is-ancestor <base commit> origin/<blocker branch>` succeeds): do nothing. The dependent's PR still shows only its own commits, and it catches up when the blocker merges. The exception is a change that amended the dependent's ticket (a shared contract, see [Amending the ticket](#amending-the-ticket)): then rebase it onto the blocker branch, as below.
+- **The blocker's branch was rewritten** (it was rebased onto its own blocker's merge, so the check above fails): tell each dependent's worker `git fetch && git rebase --onto origin/<blocker branch> <base commit> <branch>`.
+- **The blocker merged:** tell each dependent's worker `git fetch && git rebase --onto origin/<default branch> <base commit> <branch>`. Its base becomes the default branch, or the next open blocker for a fan-in ticket.
 
-Then the worker reruns the checks, and the dependent is validated again (step 7, against its new base). A worker that can't resolve a conflict inside its own Scope ends with `WORK-WORK: BLOCKED`. Its own dependents follow in turn, once it passes again.
+After a rebase, record the new base commit in `batch.md`; the worker reruns the checks, and the dependent is validated again (step 7, against its new base). A worker that can't resolve a conflict inside its own Scope ends with `WORK-WORK: BLOCKED`. Its own dependents follow in turn, once it passes again.
 
 ### Changing the plan mid-run
 
@@ -131,7 +132,7 @@ Either way, every session drives the same browser, so each agent opens its own t
 
 ### Keeping track
 
-- **`batch.md`** keeps the run alive across a long session and context compaction. One row per ticket: id, wave, blocked by, branch, base, worker name, pane, port, state (waiting / working / needs-app / blocked / validating / fixing round n / finishing / done / stopped / paused), PR link. Under the table: who holds the app slot and who's queued, and which merges are being watched. Re-read it before acting on any notification.
+- **`batch.md`** keeps the run alive across a long session and context compaction. One row per ticket: id, wave, blocked by, branch, base, base commit, worker name, pane, port, state (waiting / working / needs-app / blocked / validating / fixing round n / finishing / done / stopped / paused), PR link. Under the table: who holds the app slot and who's queued, and which merges are being watched. Re-read it before acting on any notification.
 - **One ticket's trouble stays its own.** A blocked, failing or stopped ticket only holds up the tickets that depend on it.
 
 ## Iterating after review
@@ -140,7 +141,7 @@ When the user says "address comments on <ticket>" or "change X in <ticket>" (one
 1. Sort each request or PR comment (`gh pr view --comments`): a fix inside the ticket as written, or a change to its scope, behaviour or design. Amend `ticket.md` for every change first; otherwise the validator checks against the old contract and fails the change as out of scope.
 2. Prompt the worker with the requests, and tell it whether `ticket.md` changed. Wait as in step 6.
 3. Validate again with both agents (step 7). On FAIL, run the fix loop (step 8).
-4. On PASS, prompt the worker to push and, if behaviour changed, to update the PR description with the `open-pr` skill. Then rebase its dependents (see [Rebasing dependents](#rebasing-dependents)).
+4. On PASS, prompt the worker to push and, if behaviour changed, to update the PR description with the `open-pr` skill. Its dependents follow per [Rebasing dependents](#rebasing-dependents): usually nothing to do until it merges.
 5. Write new amendments back to the tracker, then reply with what changed.
 
 ## Amending the ticket

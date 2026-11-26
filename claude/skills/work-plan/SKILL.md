@@ -40,8 +40,8 @@ This skill is the **coordinator**. It runs each phase as its own skill in a fork
 | brief | `work-plan-brief` | `brief.md`, `questions.md`, `decisions.md` | the user approves the brief |
 | contracts | `work-plan-contracts` | `contracts.md` | the user approves the contracts |
 | split | `work-plan-split` | `NN-<slug>.md`, `README.md` | `check` passes |
-| review | `work-plan-review` | fixes in the tickets, `questions.md` | a clean review; the user approves the wave table |
-| publish | this skill | tickets in the tracker | the user confirms once |
+| review | `work-plan-review` | fixes in the tickets, `questions.md` | a clean review; the user approves the wave table, and with it publishing |
+| publish | this skill | tickets in the tracker | none: approved at the review gate |
 
 Which phases run depends on the size (set at `init`):
 
@@ -79,7 +79,7 @@ Each gate shows one screen at most and points to the files for detail. Ask with 
 - **brief:** the goal in two sentences; the flows; the data map (element → data → exists / change / new); how many facts were found in the code; every decision from `decisions.md` with its id, so the user can overturn one by id.
 - **contracts:** one line per contract: id, name, owner repo, used by. New decisions with their ids.
 - **split:** no user gate. If `stamp` refuses, run the split again with the `check` output; it fixes its own tickets.
-- **review:** the wave table (with the Repo column for several repos), decisions made during review, and anything deferred.
+- **review:** the wave table with each ticket's title (and the Repo column for several repos), where the tickets will be created (tracker, container), decisions made during review, and anything deferred. This is also the confirmation to create the tickets, so ask it as one choice: create these tickets, or what to change.
 
 ## Asking
 
@@ -88,7 +88,7 @@ Read the phase's `open` questions from `questions.md`. Ask them per [references/
 ## Publish
 
 1. `plan.mjs gate <dir> publish` must be open.
-2. Create the tickets per [references/trackers.md](references/trackers.md), including its rules for plans over several repos. Confirm titles, repos, waves and the container in one message, then create the tickets and their blocked-by links, put the wave table in the container, and replace the draft numbers on first lines and in the table with the tracker's ids. A task needs no container or table: its one ticket says "Wave 1."
+2. Create the tickets per [references/trackers.md](references/trackers.md), including its rules for plans over several repos. Don't ask again: the review gate was the confirmation, and any change since then made review stale and closed this gate. Create the tickets and their blocked-by links, put the wave table in the container, and replace the draft numbers on first lines and in the table with the tracker's ids. A task needs no container or table: its one ticket says "Wave 1."
 3. Report: the wave table with links, the decisions made, anything deferred.
 
 ## Done
