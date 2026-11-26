@@ -11,13 +11,13 @@ disable-model-invocation: true
 
 ```
 work-plan  →  tickets that meet the Definition of Ready, linked into waves
-work-work  →  per ticket, as soon as its blockers allow: worker implements → validator + rules reviewer check → draft PR + demo media
+work-work  →  per ticket, as soon as its blockers allow: worker implements → ticket, rules and design validators check in parallel → draft PR + demo media
 human      →  reviews the draft PRs; iterates through the worker panes or PR comments; marks them ready and merges
 ```
 
 The ticket is the contract between the steps. The validator checks the code against the ticket, so a vague ticket can't be validated. If a ticket doesn't meet [the Definition of Ready](../work-plan/references/definition-of-ready.md), don't start it, and suggest running `work-plan` on it first. Tickets that don't depend on it can still go ahead.
 
-A ticket is done when the validator and the rules reviewer both return PASS on the final diff and its worker has finished the brief's Finish step: a draft PR, plus local paths to the demo media. The run is done when every ticket is done or stopped.
+A ticket is done when its validators all return PASS on the final diff (`ticket-validator` and `rules-reviewer`, plus `design-validator` for a ticket with a Design section) and its worker has finished the brief's Finish step: a draft PR, plus local paths to the demo media. The run is done when every ticket is done or stopped.
 
 ## What is fixed and what is discovered
 
@@ -68,15 +68,17 @@ Steps 1–3 prepare the run. Steps 4–10 run per ticket, and each ticket moves 
    - **Idle with no marker, or blocked on a permission prompt** → read the pane, tell the user which ticket it is and what it's waiting on, and don't answer approval dialogs for them.
 
    Update `batch.md` after every transition, and post its table in a few lines (ticket, state, PR), so the user never has to ask how it's going.
-7. **Validate.** Start two independent agents in the background, side by side, and give neither of them anything the worker wrote: no report, no summary.
-   - **`ticket-validator`**: does the branch implement the ticket? Give it the current text of `ticket.md`, the worktree path, the base ref and the check commands. For a UI ticket, add the design tool and file key, and how to reach the ticket's running app (see [Dev servers](#dev-servers)). It pulls the design and measures the running app itself. Validators for non-UI tickets run side by side; UI validators take turns, because they share this session's browser.
-   - **`rules-reviewer`**: does the changed code follow the coding rules that apply to it (the user's and the repo's CLAUDE.md, AGENTS.md and rule files)? Give it the worktree path, the base ref, and the ticket's Scope and Out of scope. Not the list of rules: it finds them from the changed files itself. It needs no browser, so it never waits for the app slot.
+7. **Validate.** Start the independent agents in the background, all at once: three for a ticket with a Design section, two for any other. Give none of them anything the worker wrote: no report, no summary.
+   - **`ticket-validator`**: does the branch implement the ticket? Give it the current text of `ticket.md`, the worktree path, the base ref and the check commands. It reads the code and runs the checks; it needs no browser, so it never waits for the app slot.
+   - **`rules-reviewer`**: does the changed code follow the coding rules that apply to it (the user's and the repo's CLAUDE.md, AGENTS.md and rule files)? Give it the worktree path, the base ref, and the ticket's Scope and Out of scope. Not the list of rules: it finds them from the changed files itself. It needs no browser either.
+   - **`design-validator`** (tickets with a Design section only): does the UI match the design? Give it the current text of `ticket.md`, the worktree path, the base ref, the design source (the Figma file key, or the paths of the mockup images: the plan's `input/mockups/`, or ask the user for them), and how to reach the ticket's running app (see [Dev servers](#dev-servers)). It pulls the design and measures the running app itself. It is the only validator that uses the browser, so design validators take turns: they share this session's browser.
 
-   The ticket passes this step when both return PASS. The rules reviewer's notes and conflicts never block; keep them for the PR and the Report.
-8. **Fix loop.** On FAIL from either agent, send the worker one message with both gap lists, each under its own heading, and go back to step 6 for that ticket. Every round reruns both agents, since a fix for one can break the other. If a rules violation can only be fixed outside the ticket's Scope, or the ticket itself requires what a rule forbids, don't send it to the worker: ask the user, and amend `ticket.md` with the answer. After **2** failed rounds, stop the ticket: notify the user with its remaining gaps and leave its worker running. Every ticket that depends on it, directly or not, is stopped too. The rest of the run carries on.
-9. **Finish.** On PASS from both, prompt the worker with the "Finish" section of the brief, including the rules reviewer's notes if it had any: record demo media, then open the draft PR with the media attached. Then open the gates this PASS unlocks (see [Start gates](#start-gates)) and go to step 4 for those tickets.
+   The ticket passes this step when all of them return PASS. The rules reviewer's notes and conflicts never block, and neither do the design validator's unverified rows; keep both for the PR and the Report.
+8. **Fix loop.** On FAIL from any of them, send the worker one message with every gap list, each under its own heading, and go back to step 6 for that ticket. Every round reruns all of them, since a fix for one can break another. If a rules violation can only be fixed outside the ticket's Scope, or the ticket itself requires what a rule forbids, don't send it to the worker: ask the user, and amend `ticket.md` with the answer. After **2** failed rounds, stop the ticket: notify the user with its remaining gaps and leave its worker running. Every ticket that depends on it, directly or not, is stopped too. The rest of the run carries on.
+9. **Finish.** On PASS from all of them, prompt the worker with the "Finish" section of the brief, including the rules reviewer's notes and the design validator's table, if there are any: record demo media, then open the draft PR with the media attached. Then open the gates this PASS unlocks (see [Start gates](#start-gates)) and go to step 4 for those tickets.
 10. **Report.** When a ticket's worker reports its PR, send a herdr notification (`--sound done`) and post one line: ticket id and PR link. When the whole run is done or stopped, reply with the final wave table (ticket, PR or why it stopped), then one section per ticket:
-    - the validator's verdict table, with design rows it couldn't check in the running app listed separately as "not independently checked";
+    - the ticket validator's verdict table;
+    - the design validator's table, if the ticket has a Design section, with the rows it checked by screenshot and the rows it couldn't check listed separately as "not independently checked";
     - the rules reviewer's notes and conflicts, if any;
     - the amendments made to the ticket, and confirmation they were written back to the tracker;
     - absolute paths to the files in `media/`;
@@ -88,7 +90,7 @@ Leave the worktrees and the workers running. The user reviews the PRs and iterat
 
 ## Running a plan
 
-Each ticket gets its own worktree, worker, workspace folder and validator. The coordinator is the only part shared across them, and it is the scheduler. There is no limit on how many tickets run at once: the links decide.
+Each ticket gets its own worktree, worker, workspace folder and validators. The coordinator is the only part shared across them, and it is the scheduler. There is no limit on how many tickets run at once: the links decide.
 
 ### Start gates
 
@@ -125,8 +127,8 @@ An amendment can change the plan itself: a ticket turns out to need a new blocke
 
 Running several UI tickets at once needs the app running more than once.
 
-- **One per worktree,** when the repo's dev command takes a port (a `PORT` variable, a `--port` flag) and nothing ties the app to one URL: an auth callback, a CORS allowlist, a cookie bound to a port. Give each UI ticket its own free port (check with `ss -ltn`), and record it in its brief and in `batch.md`. Each worker starts and stops its own server; its validator and demo use that port.
-- **A single app slot** otherwise, or when you can't tell. The coordinator hands the app to one holder at a time, first come first served: a worker asks with `WORK-WORK: NEEDS-APP` and gives it back by stopping the app and ending its turn; a UI validator holds it while it runs; a worker in Finish holds it from when you send Finish until it reports done, if the change is user-visible.
+- **One per worktree,** when the repo's dev command takes a port (a `PORT` variable, a `--port` flag) and nothing ties the app to one URL: an auth callback, a CORS allowlist, a cookie bound to a port. Give each UI ticket its own free port (check with `ss -ltn`), and record it in its brief and in `batch.md`. Each worker starts and stops its own server; its design validator and demo use that port.
+- **A single app slot** otherwise, or when you can't tell. The coordinator hands the app to one holder at a time, first come first served: a worker asks with `WORK-WORK: NEEDS-APP` and gives it back by stopping the app and ending its turn; a design validator holds it while it runs; a worker in Finish holds it from when you send Finish until it reports done, if the change is user-visible.
 
 Either way, every session drives the same browser, so each agent opens its own tab and works only in tabs it opened. If the user's own dev server is already on a port, use it or pick another port; never kill it.
 
@@ -140,7 +142,7 @@ Either way, every session drives the same browser, so each agent opens its own t
 When the user says "address comments on <ticket>" or "change X in <ticket>" (one ticket or several; each runs on its own):
 1. Sort each request or PR comment (`gh pr view --comments`): a fix inside the ticket as written, or a change to its scope, behaviour or design. Amend `ticket.md` for every change first; otherwise the validator checks against the old contract and fails the change as out of scope.
 2. Prompt the worker with the requests, and tell it whether `ticket.md` changed. Wait as in step 6.
-3. Validate again with both agents (step 7). On FAIL, run the fix loop (step 8).
+3. Validate again with all of its validators (step 7). On FAIL, run the fix loop (step 8).
 4. On PASS, prompt the worker to push and, if behaviour changed, to update the PR description with the `open-pr` skill. Its dependents follow per [Rebasing dependents](#rebasing-dependents): usually nothing to do until it merges.
 5. Write new amendments back to the tracker, then reply with what changed.
 

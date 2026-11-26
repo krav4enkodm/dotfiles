@@ -110,6 +110,23 @@ understood, so a misunderstanding only showed in the tickets. Now:
   plan can span a frontend and its API. `work-work` still runs per repo and
   picks its rows from the wave table's Repo column.
 
+## Three validators, side by side
+
+`work-work` checks every ticket with independent agents that never see the
+worker's report, one question each: `ticket-validator` (does it do the
+ticket?), `rules-reviewer` (does it follow the coding rules?) and, for a
+ticket with a Design section, `design-validator` (does it look like the
+design?). The design check used to be the last step of `ticket-validator`.
+Split out, it runs at the same time as the other two, and it is the only one
+that needs the browser, so the functional check of a UI ticket no longer
+waits for the browser or the app slot.
+
+The design validator compares Figma values row by row where the file has
+them. Where a node has none (no variables, a flattened image), it falls back
+to comparing the node's screenshot with the page. An image mockup isn't a
+spec for pixels, so there it only checks that the page has the same
+elements, in the same order, with the same text and states.
+
 ## Claude's browser
 
 The `chrome-devtools` MCP launches its own Chromium instead of attaching to

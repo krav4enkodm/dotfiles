@@ -6,8 +6,9 @@
 #                            no PRs created as ready for review
 #   bash-guard.sh reviewer   readiness-reviewer, rules-reviewer: read-only
 #                            commands only
-#   bash-guard.sh validator  ticket-validator: run anything except commands
-#                            that change git state or touch GitHub
+#   bash-guard.sh validator  ticket-validator, design-validator: run anything
+#                            except commands that change git state or touch
+#                            GitHub
 #
 # It matches command text, so it catches the forms Claude normally writes, not
 # every possible one (`sh -c '...'` gets past it). A guardrail, not a sandbox.

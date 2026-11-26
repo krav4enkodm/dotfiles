@@ -1,6 +1,6 @@
 # Design: tickets and checks
 
-One place for how UI tickets handle the design, used at every step: `work-plan` and the `readiness-reviewer` when planning, the `work-work` worker when building, and the `ticket-validator` when checking. Skip this file for tickets without a Design section.
+One place for how UI tickets handle the design, used at every step: `work-plan` and the `readiness-reviewer` when planning, the `work-work` worker when building, and the `design-validator` when checking. Skip this file for tickets without a Design section.
 
 ## The rule
 
@@ -8,7 +8,7 @@ The design file is the only source of visual values. The ticket says **where** t
 
 ## The ticket's Design section
 
-- **Element map.** One line per element the ticket adds or changes: the element, its design node ID, and the design-system component expected to render it (e.g. "Submit button: 12-345, design-system `Button`"). Menus, popovers and other open states get their own node.
+- **Element map.** One line per element the ticket adds or changes: the element, its design node ID (or, for an image mockup, the file and the region), and the design-system component expected to render it (e.g. "Submit button: 12-345, design-system `Button`"; "Invite modal: mockups/invite.png, centre"). Menus, popovers and other open states get their own node.
 - **What the design can't show.** Decisions a static frame can't express:
   - which state a frame draws when it isn't the resting one (hover, active, open, selected, loading, disabled), and what the element looks like at rest;
   - existing elements the mockup leaves out, and whether they stay or go;
@@ -35,11 +35,14 @@ Pull every node and check:
 
 - Read the ticket's notes on states before pulling nodes: a node drawn as hover, active or open is not the resting look.
 - Implement each value through the design-system prop or token that produces it, never a hardcoded value.
+- A node with no values to read (no variables, a flattened image) or an image mockup: match the picture with the design system's components and tokens, the same way the `design-validator` will compare it (see below).
 - Start the app (see "Running the app" in the brief) and measure each element's computed styles for every property in scope, in each state the ticket names. Stop the app when done.
 - Where a value can be asserted cheaply, add it to the component's test (e.g. computed font size), so CI guards it.
 - A mismatch you can't fix inside the Scope, or a design question the ticket doesn't answer, is a BLOCKED question.
 
-## Validating (`ticket-validator`)
+## Validating (`design-validator`)
+
+The `design-validator` picks one of three methods per element: Figma values (below) where the node has them; the node's screenshot where it doesn't; and for an image mockup, whether the page has the same elements. The agent's file has the details of the last two.
 
 For each element and property in scope, find what produces it in the code and mark the row:
 - **met**: a test asserts it, or the code settles it;
