@@ -26,3 +26,25 @@ Applies in every project. A repo's own CLAUDE.md / AGENTS.md wins where they dif
   what is missing. Never read, print or type a secret yourself.
 - Keep secrets out of commits, PR text and logs. Never read credential files
   unless asked.
+
+## Changes
+
+How I'd want a change to look by the time someone reviews it. File-specific
+conventions live in `rules/`.
+
+- Check the change against every point of the ticket and its comments. Take
+  copy, amounts and date formats from the spec verbatim. When a product,
+  design or backend question decides the behaviour, ask; don't guess in code.
+- Keep the change to its ticket. Note out-of-scope problems and refactors for
+  a follow-up ticket instead of fixing them in passing, and don't touch code
+  someone else is reworking in an open PR.
+- Before calling it done, remove leftovers: debug output, commented-out code,
+  `.only`, scratch files, planning or agent notes, and whatever a removal
+  orphaned (translation keys, enum values, constants, fixtures, lint disables,
+  dependencies). Implementation artifacts never go in the repo; personal tool
+  files go in `.git/info/exclude`, not the shared `.gitignore`.
+- Explain anything non-obvious (a skipped test, an extra wait, a workaround, a
+  disabled lint rule) in one line next to it or in the PR description, so it
+  isn't taken for a mistake.
+- A UI change comes with screenshots or a recording of each changed flow, and
+  the PR says what was tested manually and what wasn't.

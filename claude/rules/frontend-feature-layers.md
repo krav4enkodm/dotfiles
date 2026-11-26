@@ -42,9 +42,8 @@ component is pure UI.
 - **Types flow outward.** Services export the row/result types; components use
   them as prop types. Mocks use the real query types and are deleted when real
   data lands.
-- **Package boundaries.** Import a package's public entry point, never its
-  `src/` internals. Feature packages depend on shared packages, never on each
-  other.
+- **Package boundaries.** See `package-boundaries`: public entry points only,
+  and feature packages depend on shared packages, never on each other.
 - **Verify.** Typecheck and lint the changed package, and run its tests. Test
   services, and components with real branching (loading vs data), using the
   repo's existing test setup.

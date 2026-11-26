@@ -53,6 +53,13 @@ Re-running it is safe.
   for particular files, scoped with `paths:` so they load only when Claude
   touches matching files. `frontend-feature-layers` was a skill and is now a rule:
   it's a convention, and a skill applies only when the model decides to load it.
+- **The coding rules come from my review history,** not from general advice:
+  ~1,200 of my PR review comments were mined for patterns, and a pattern became
+  a rule only if I raised it repeatedly or held it when an author pushed back.
+  Conventions of one particular codebase (a test runner, an export style, a
+  folder layout) were left out; the rules defer to the repo's own instead.
+  Process habits that apply to every change are in CLAUDE.md, because a rule
+  file only loads for matching files.
 - **Skills** hold procedures. A skill with side effects that should never start
   on its own (`work-work`) sets `disable-model-invocation: true`. `commit` and
   `open-pr` stay model-invocable because `work-work`'s workers call them
