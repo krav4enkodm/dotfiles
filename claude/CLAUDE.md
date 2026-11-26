@@ -1,6 +1,10 @@
-# Personal defaults
+# Defaults
 
-Applies in every project. A repo's own CLAUDE.md / AGENTS.md wins where they differ.
+Applies in every project, together with the rules in `~/.claude/rules/`. A
+repo's own documented rules (its CLAUDE.md, AGENTS.md, `.claude/rules/`, lint
+config, design system) win where they differ. These rules win over code that
+merely does it differently: follow them in what you write, even where the
+surrounding code doesn't, without rewriting that code beyond the task.
 
 ## Git and GitHub
 
@@ -26,3 +30,23 @@ Applies in every project. A repo's own CLAUDE.md / AGENTS.md wins where they dif
   what is missing. Never read, print or type a secret yourself.
 - Keep secrets out of commits, PR text and logs. Never read credential files
   unless asked.
+
+## Changes
+
+What a change needs before review.
+
+- Check the change against every point of the ticket or request. Take copy,
+  amounts and date formats from the spec verbatim. When a product, design or
+  backend question decides the behaviour, ask; don't guess in code.
+- Keep the change to its task. Note out-of-scope problems and refactors for a
+  follow-up instead of fixing them in passing.
+- Before calling it done, remove leftovers: debug output, commented-out code,
+  `.only`, scratch files, planning or agent notes, and whatever a removal
+  orphaned (translation keys, enum values, constants, fixtures, lint disables,
+  dependencies). Implementation artifacts never go in the repo; personal tool
+  files go in `.git/info/exclude`, not the shared `.gitignore`.
+- Explain anything non-obvious (a skipped test, an extra wait, a workaround, a
+  disabled lint rule) in one line next to it or in the PR description, so it
+  isn't taken for a mistake.
+- A UI change comes with screenshots or a recording of each changed flow, and
+  the PR says what was tested manually and what wasn't.
