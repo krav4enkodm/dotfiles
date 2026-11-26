@@ -20,6 +20,13 @@ The skill speaks in generic terms: **container** (project / epic / milestone), *
 | Related | `relatedTo` | "relates to" link | "Related: #N" | "Related: NN" |
 | Branch name | Use the issue's generated branch name | Key prefix, e.g. `PROJ-123-…` | `<n>-<slug>` | `<slug>` |
 
+## Plans over several repos
+
+- **Each ticket lives where its repo's tickets live.** With GitHub Issues, create it in its own repo. With Linear or Jira, keep every ticket in the plan's one container and mark the repo the way the team already does (a label, a component); create that marker only if the user agrees.
+- **Cross-repo blockers are normal links.** With GitHub Issues, write `Blocked by owner/repo#N`. With markdown files, write `Blocked by: <repo> NN`.
+- **The wave table keeps its Repo column** in the container, so `work-work` in each repo can pick its own rows.
+- **No tracker:** write each repo's tickets to that repo's `docs/plans/<slug>/`, with a `README.md` holding the full wave table in each.
+
 ## Rules
 
 - Creating tickets is outward-facing: confirm the plan (titles, order, container) once, before the first create, unless the user already asked you to create them.

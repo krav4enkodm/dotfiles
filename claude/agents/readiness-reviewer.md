@@ -1,6 +1,6 @@
 ---
 name: readiness-reviewer
-description: Read-only reviewer that checks whether a ticket (or a set of tickets, in cross-ticket mode) is ready to implement, by verifying its claims against the codebase and installed dependencies. Returns gaps already resolved from the code, plus questions that need a user decision, each with options and a recommendation. Use from the work-plan skill for 3+ tickets, or on its own when asked "is ticket X ready?". The caller must pass the full ticket text; this agent does not read or write the tracker.
+description: Read-only reviewer that checks whether a ticket (or a set of tickets, in cross-ticket mode) is ready to implement, by verifying its claims against the codebase and installed dependencies. Returns gaps already resolved from the code, plus questions that need a user decision, each with options and a recommendation. Use from work-plan's review phase for 3+ tickets, or on its own when asked "is ticket X ready?". The caller must pass the full ticket text; this agent does not read or write the tracker.
 model: sonnet
 tools: Read, Grep, Glob, Bash, mcp__plugin_figma_figma__get_design_context, mcp__plugin_figma_figma__get_variable_defs, mcp__plugin_figma_figma__get_screenshot, mcp__plugin_figma_figma__get_metadata
 hooks:
@@ -19,7 +19,7 @@ The caller gives you:
 - **Mode:** `single` (one ticket) or `cross` (all tickets of a plan).
 - The full ticket text (or all tickets in cross mode).
 - The overall goal, sibling tickets and what each owns, and decisions already made. Do not re-ask a decision listed there.
-- The repo path and areas to start with.
+- The repo path and areas to start with. A plan over several repos gives each ticket's repo and path.
 
 ## How to review
 
@@ -54,11 +54,11 @@ Return exactly this structure, and nothing else:
 - <one line per notable claim you verified, with evidence>
 ```
 
-In cross mode, add a last section with the waves as the links define them, and the files each ticket changes (from its Scope):
+In cross mode, add a last section with the waves as the links define them, and the files each ticket changes (from its Scope). Leave out the Repo column for a plan in one repo:
 
 ```
 ### Waves
-| Wave | Ticket | Blocked by | Changes |
+| Wave | Ticket | Repo | Blocked by | Changes |
 ```
 
 READY means no blockers or gaps remain, and no questions are open. Nits alone don't block READY.

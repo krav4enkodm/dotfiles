@@ -53,7 +53,7 @@ Everything outside the repo lives under `~/work-work/<repo>/`:
 
 Steps 1–3 prepare the run. Steps 4–10 run per ticket, and each ticket moves through them on its own, as soon as its start gate opens.
 
-1. **Load the tickets.** For a plan, load every ticket in its container (or folder) and its blocked-by links; for ticket ids, load those tickets and their links. Save each ticket's full text to `<ticket-id>/ticket.md`. From here on that file is the contract: the worker and the validator always work from it, and every decision made during the work goes into it first (see [Amending the ticket](#amending-the-ticket)). Then:
+1. **Load the tickets.** For a plan, load every ticket in its container (or folder) and its blocked-by links; for ticket ids, load those tickets and their links. If the plan's wave table has a Repo column, load only the rows for the repo you're in: tickets in other repos are blockers outside the run. Save each ticket's full text to `<ticket-id>/ticket.md`. From here on that file is the contract: the worker and the validator always work from it, and every decision made during the work goes into it first (see [Amending the ticket](#amending-the-ticket)). Then:
    - A ticket whose PR has already merged counts as merged; one whose branch already has an open PR, from an earlier run, ask whether to treat it as passed.
    - Check each remaining ticket against the Definition of Ready. If it's not ready, leave it out and name the missing parts; the tickets that depend on it are left out too.
    - A blocker outside the run must already be merged. If it isn't, leave the ticket out and say which blocker it waits for.
