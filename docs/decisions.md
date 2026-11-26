@@ -57,7 +57,11 @@ Re-running it is safe.
   ~1,200 of my PR review comments were mined for patterns, and a pattern became
   a rule only if I raised it repeatedly or held it when an author pushed back.
   Conventions of one particular codebase (a test runner, an export style, a
-  folder layout) were left out; the rules defer to the repo's own instead.
+  folder layout) were left out; the rules defer to the repo's own documented
+  rules instead. They do win over code that merely does it differently, since
+  surrounding code may be low quality; a rule that stops serving gets rewritten.
+  Where my comments seemed to contradict each other, I settled the case and
+  the rule says when each side applies.
   Process habits that apply to every change are in CLAUDE.md, because a rule
   file only loads for matching files.
 - **Skills** hold procedures. A skill with side effects that should never start

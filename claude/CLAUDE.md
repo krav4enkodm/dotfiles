@@ -1,6 +1,10 @@
-# Personal defaults
+# Defaults
 
-Applies in every project. A repo's own CLAUDE.md / AGENTS.md wins where they differ.
+Applies in every project, together with the rules in `~/.claude/rules/`. A
+repo's own documented rules (its CLAUDE.md, AGENTS.md, `.claude/rules/`, lint
+config, design system) win where they differ. These rules win over code that
+merely does it differently: follow them in what you write, even where the
+surrounding code doesn't, without rewriting that code beyond the task.
 
 ## Git and GitHub
 
@@ -29,15 +33,13 @@ Applies in every project. A repo's own CLAUDE.md / AGENTS.md wins where they dif
 
 ## Changes
 
-How I'd want a change to look by the time someone reviews it. File-specific
-conventions live in `rules/`.
+What a change needs before review.
 
-- Check the change against every point of the ticket and its comments. Take
-  copy, amounts and date formats from the spec verbatim. When a product,
-  design or backend question decides the behaviour, ask; don't guess in code.
-- Keep the change to its ticket. Note out-of-scope problems and refactors for
-  a follow-up ticket instead of fixing them in passing, and don't touch code
-  someone else is reworking in an open PR.
+- Check the change against every point of the ticket or request. Take copy,
+  amounts and date formats from the spec verbatim. When a product, design or
+  backend question decides the behaviour, ask; don't guess in code.
+- Keep the change to its task. Note out-of-scope problems and refactors for a
+  follow-up instead of fixing them in passing.
 - Before calling it done, remove leftovers: debug output, commented-out code,
   `.only`, scratch files, planning or agent notes, and whatever a removal
   orphaned (translation keys, enum values, constants, fixtures, lint disables,

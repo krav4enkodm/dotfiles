@@ -69,12 +69,12 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 
 | Rule | Loads for | What it says |
 |---|---|---|
-| `code-comments` | `*.ts`, `*.tsx` | No comments that narrate the code; keep directives and short "why" notes. |
+| `code-comments` | JS/TS source | No comments that narrate the code; keep directives, one-line "why" notes and ticketed TODOs. |
 | `frontend-feature-layers` | `*.tsx`, `*.jsx` | Lay out a data-backed React feature as data / services / presentational components / thin container. |
 | `typescript-types` | `*.ts`, `*.tsx` | Types say what the data is: trust the schema's nullability, required unless a caller omits it, narrow instead of casting, derive from generated types. |
-| `react-components` | `*.tsx`, `*.jsx` | The parent decides rendering, shared components know nothing of their callers, every attribute and wrapper has a reason, design system first. |
-| `react-state-and-data` | `*.tsx`, `*.jsx`, `use*.ts` | One source of truth, handlers over effects, form state mirrors the mutation input, fetch where the flow starts, every loading and error state. |
-| `code-clarity` | JS/TS source | No unexplained code, reuse before writing, positive booleans and domain names, the traps (zero, money, empty lists). |
+| `react-components` | `*.tsx`, `*.jsx` | The parent decides rendering, required callbacks, shared components know nothing of their callers, balanced props and slots, fixed variants, no wrappers without value, design system first. |
+| `react-state-and-data` | `*.tsx`, `*.jsx`, `useX.ts` | One source of truth, handlers over effects, memoize only for a real problem, form state mirrors the mutation input, fetch where the flow starts, every loading and error state. |
+| `code-clarity` | JS/TS source | No unexplained code, lint as a strong default, when to extract and when to inline, positive booleans and domain names, the traps (zero, money, empty lists). |
 | `package-boundaries` | JS/TS source, `package.json`, `tsconfig*.json` | Public entry points, no own-index imports, dependencies point one way, honest manifests. |
 | `frontend-tests` | tests, stories, mocks | Right level, cover what you added, tests that fail when behaviour breaks, typed mocks next to their query. |
 
