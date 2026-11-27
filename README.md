@@ -54,6 +54,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `work-plan-split` | Phase of `work-plan`: cuts brief and contracts into ticket drafts and waves, until `plan.mjs check` passes. | `work-plan` (`plan-files.md`, `definition-of-ready.md`, `design.md`) |
 | `work-plan-review` | Phase of `work-plan`: one readiness-review round per run, fixing what the code settles and recording the rest as questions. | `work-plan` (`review-checklist.md`, `definition-of-ready.md`), `readiness-reviewer` agent |
 | `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked by an independent validator against its ticket and by an independent reviewer against the coding rules, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` and `rules-reviewer` agents, herdr |
+| `work-clean` | Runs only as `/work-clean`. Removes the herdr worktrees whose PRs have merged: closes the workspace, removes the checkout and deletes the local branch. Skips any worktree with uncommitted changes, commits beyond the merged PR, or a working agent. | herdr, `gh` |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
 | `agent-login` | Signs Claude's browser in to a web app with a username and password from 1Password: `op run` hands them to a script that types them into the login form, so they never enter the conversation. One env file of `op://` references per app in `~/.config/agent-login/`. | `chrome-devtools` MCP (debugging port 9333), 1Password CLI |
 
@@ -107,6 +108,7 @@ skills and agents listed above.
 /work-plan  →  recon → brief ✋ → contracts ✋ → split → review (max 3 rounds) ✋ → tickets + wave table in the tracker
 /work-work  →  per ticket, once its blockers pass (or merge, for 2+): ticket.md → herdr worktree → worker Claude → validator + rules reviewer → draft PR + demo media
 you         →  review and merge the draft PRs; iterate in the worker panes or via PR comments
+/work-clean →  remove the worktrees, workspaces and local branches of merged PRs
 ```
 
 ✋ marks the gates where `work-plan` stops for your approval. Every phase runs
