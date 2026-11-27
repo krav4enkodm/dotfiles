@@ -56,6 +56,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked by an independent validator against its ticket and by an independent reviewer against the coding rules, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` and `rules-reviewer` agents, herdr |
 | `work-clean` | Runs only as `/work-clean`. Removes the herdr worktrees whose PRs have merged: closes the workspace, removes the checkout and deletes the local branch. Skips any worktree with uncommitted changes, commits beyond the merged PR, or a working agent. | herdr, `gh` |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
+| `backend-review` | Reviews a backend change (branch, PR or paths) for runtime risk — failure paths, retries, idempotency, races, data safety, rollout — and design — where logic lives, simplicity, API contracts, tests. Reports findings by severity, each with its cost and a fix; read-only, never posts. | the `backend-*` rules, `gh` |
 | `agent-login` | Signs Claude's browser in to a web app with a username and password from 1Password: `op run` hands them to a script that types them into the login form, so they never enter the conversation. One env file of `op://` references per app in `~/.config/agent-login/`. | `chrome-devtools` MCP (debugging port 9333), 1Password CLI |
 
 ## Agents
@@ -78,9 +79,14 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `code-clarity` | JS/TS source | No unexplained code, lint as a strong default, when to extract and when to inline, positive booleans and domain names, the traps (zero, money, empty lists). |
 | `package-boundaries` | JS/TS source, `package.json`, `tsconfig*.json` | Public entry points, no own-index imports, dependencies point one way, honest manifests. |
 | `frontend-tests` | tests, stories, mocks | Right level, cover what you added, tests that fail when behaviour breaks, typed mocks next to their query. |
+| `backend-reliability` | backend source | Decide what each failure means, idempotent retries, publish after commit, atomic updates, never guess a match, no silent outcomes. |
+| `backend-data` | backend source, SQL, migrations | Let the database do the work, bounded lists, no N+1, expand/migrate/contract, constraints match validations, trace personal data to every sink. |
+| `backend-design` | backend source | Logic lives with its concept, variants own their behaviour, config as data, simple over clever, build for today with a cheap shape for tomorrow, API contracts for the consumer. |
+| `backend-tests` | backend tests | Each behaviour once at its own layer, cover the risky paths, tests that fail when it breaks, real wiring, minimal deterministic setup. |
 
-The coding rules are distilled from ~1,200 of my review comments (2022–2026):
-each states a pattern I raised repeatedly or held when an author pushed back.
+The frontend rules are distilled from ~1,200 of my review comments (2022–2026),
+the backend rules from ~1,300 review comments by two senior backend reviewers:
+each states a pattern raised repeatedly or held when an author pushed back.
 
 ## Guardrails
 
