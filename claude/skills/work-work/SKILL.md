@@ -84,7 +84,7 @@ Steps 1–3 prepare the run. Steps 4–10 run per ticket, and each ticket moves 
 
     If tickets are still waiting on merges when everything else is done, say which merges they wait for, and leave the merge watch running.
 
-Leave the worktrees and the workers running. The user reviews the PRs and iterates through the worker panes.
+Leave the worktrees and the workers running. The user reviews the PRs and iterates through the worker panes, and runs `/work-clean` once they've merged.
 
 ## Running a plan
 
@@ -159,5 +159,5 @@ An amendment is any decision made after planning: an answer to a BLOCKED questio
 - **Start every message to a worker with `Coordinator:`**, except the first one ("Read <path>/brief.md and follow it."). herdr types into the same pane as the user, so this is how the pane's history tells the run's messages from the user's.
 - **Writing amendments back is the only ticket edit**, besides the plan changes the user approves. No status, assignee or priority changes unless the repo's ticket skill says to.
 - **Never merge a PR or mark it ready.** Merges are the user's; the run waits for them.
-- **Never close a worktree, pane or workspace.** Cleanup after merge is the user's call.
+- **Never close a worktree, pane or workspace.** Cleanup after merge is the user's call, with `/work-clean`.
 - **Never copy production data into briefs, tests, or demos.** Tests use synthetic data; demos use the shared non-production environment's existing data, read-only.

@@ -65,7 +65,7 @@ Re-running it is safe.
   Process habits that apply to every change are in CLAUDE.md, because a rule
   file only loads for matching files.
 - **Skills** hold procedures. A skill with side effects that should never start
-  on its own (`work-work`) sets `disable-model-invocation: true`. `commit` and
+  on its own (`work-work`, `work-clean`) sets `disable-model-invocation: true`. `commit` and
   `open-pr` stay model-invocable because `work-work`'s workers call them
   through the Skill tool.
 - **Deny rules and hooks** hold anything that must never happen. Prose in
