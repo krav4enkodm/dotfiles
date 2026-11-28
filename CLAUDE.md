@@ -15,7 +15,7 @@ docs/decisions.md for how the installer works and what is deliberately left out.
   messages and PR descriptions: no in-house design systems, product terms,
   ticket keys, internal URLs or package names. Use generic examples.
 - **Skills depend on each other through `work-plan/references/`.** `work-work` and
-  both agents read files from there. When renaming or moving any of them, update
+  the agents read files from there. When renaming or moving any of them, update
   every reference (`grep -rn 'work-plan/' claude/`) and the "Depends on" columns
   in README.md.
 - **Keep README.md in step** when adding, removing or renaming a skill or agent.

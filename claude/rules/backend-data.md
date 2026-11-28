@@ -1,14 +1,22 @@
 ---
 paths:
-  - "**/*.{rb,py,go,java,kt,scala,cs,php,ex,exs,rs,sql}"
-  - "**/{migrations,migrate,db,schema}/**"
-  - "**/{server,backend,api,services,jobs,workers,consumers,handlers}/**/*.{ts,js,mjs}"
+  - "**/*.{rb,py,go,java,kt,scala,cs,php,ex,exs,rs}"
+  - "**/{server,backend,jobs,workers,consumers}/**/*.{ts,js,mjs}"
+  - "**/apps/{api,server,backend,worker}*/**/*.{ts,js,mjs}"
+  - "**/{app,pages}/api/**/*.{ts,js}"
+  - "**/*.{controller,repository,entity,job,worker,consumer}.{ts,js}"
+  - "**/*.{sql,prisma}"
+  - "**/{migrations,migrate,db}/**"
+  - "**/*.migration.{ts,js}"
 ---
 
 # Backend data
 
 Follow the repo's migration and data-protection guides first; these are the
 defaults where they say nothing.
+
+For code that serves requests, runs jobs or owns stored data. In a CLI, a
+library or a one-off script, apply only what fits it.
 
 ## Queries
 
@@ -32,7 +40,8 @@ defaults where they say nothing.
   the real cases.
 - **Group writes that must succeed together** in one transaction; prefer one
   bulk statement to a loop of single updates.
-- **Store money and measures as integers** in the smallest unit.
+- **Store money and measures exactly:** integers in the smallest unit or a
+  fixed-point decimal, never a float, and with their currency or unit.
 
 ## Schema and rollout
 
@@ -103,4 +112,5 @@ defaults where they say nothing.
 - **Plan the lifecycle:** deleting a parent must not orphan child rows holding
   personal data, and a cascade must not erase a record you are required to keep.
 - **A new purpose, transfer or wider permission waits for sign-off,** behind a
-  switch that is off by default, and the data inventory is updated with it.
+  switch that is off by default, and any data inventory the organisation keeps
+  is updated with it.

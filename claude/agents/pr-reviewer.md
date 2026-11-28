@@ -28,20 +28,10 @@ fine.
 
 ## 1. Find the rules that apply
 
-`git diff --name-status <base>...<head>` lists the changed files. Collect rules
-from every level and keep those that apply to a changed file:
-
-| Source | Applies to |
-|---|---|
-| `~/.claude/rules/**/*.md` | files matching its `paths:` frontmatter; every file if it has none |
-| `CLAUDE.md`, `AGENTS.md`, `CLAUDE.local.md` at the repo root, and `.claude/CLAUDE.md` | every file in the repo |
-| `CLAUDE.md` / `AGENTS.md` in a subdirectory | files under that directory |
-| `<repo>/.claude/rules/**/*.md` | files matching its `paths:`; every file if it has none |
-
-Match `paths:` globs against paths relative to the repo root, follow `@path`
-imports one level deep, and read every matching rule in full. Keep guidance
-about code; skip process rules (git, PRs, commands). The repo's rules win over
-the user's, a closer directory over a farther one.
+`git diff --name-status <base>...<head>` lists the changed files. Find the rules
+that apply to them as `~/.claude/skills/work-plan/references/rule-discovery.md`
+describes, reading rule files from the head ref where the repo's own rules
+changed in this PR.
 
 A changed file is **backend** when a `backend-*` rule matches it, or it is a
 migration, SQL, a job, consumer, webhook or server handler. Note the stack, and

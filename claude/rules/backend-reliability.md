@@ -1,7 +1,10 @@
 ---
 paths:
   - "**/*.{rb,py,go,java,kt,scala,cs,php,ex,exs,rs}"
-  - "**/{server,backend,api,services,jobs,workers,consumers,handlers}/**/*.{ts,js,mjs}"
+  - "**/{server,backend,jobs,workers,consumers}/**/*.{ts,js,mjs}"
+  - "**/apps/{api,server,backend,worker}*/**/*.{ts,js,mjs}"
+  - "**/{app,pages}/api/**/*.{ts,js}"
+  - "**/*.{controller,repository,entity,job,worker,consumer}.{ts,js}"
 ---
 
 # Backend reliability
@@ -9,11 +12,14 @@ paths:
 Code runs more than once, out of order, halfway, and next to other code doing
 the same thing. Write it for that.
 
+For code that serves requests, runs jobs or owns stored data. In a CLI, a
+library or a one-off script, apply only what fits it.
+
 ## Failures
 
 - **Fail loudly on states that should be impossible.** Where your own code
-  guarantees a value, don't guard it: no safe navigation, nil checks, fallback
-  chains, non-raising saves or "report and carry on". Raise where the invariant
+  guarantees a value, don't guard it: no null-safe access, null checks,
+  fallback chains, saves that fail silently or "report and carry on". Raise where the invariant
   breaks, so the bug shows at its source instead of as wrong data or an email
   to the wrong person. Required lookups use the raising form; a branch over
   known variants raises on an unknown one. Untrusted input is different:
@@ -87,8 +93,8 @@ the same thing. Write it for that.
   degenerate input: empty list, duplicates in one payload, blank vs missing,
   future timestamps, both or neither of two exclusive arguments.
 - **Keep unknown apart from empty** where callers act differently on them:
-  return null for a missing value, never `''`, `0` or placeholder text; a list
-  is an empty list, not null; "clear this field" differs from "not sent".
+  return null for a missing value, never `''`, `0` or placeholder text;
+  "clear this field" differs from "not sent".
 - **A case that legitimately can't succeed** (the external state it needs is
   gone) **returns a skipped result** instead of raising on every retry.
 

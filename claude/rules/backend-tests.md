@@ -4,13 +4,18 @@ paths:
   - "**/*_{spec,test}.{rb,py,go,exs}"
   - "**/test_*.py"
   - "**/*{Test,Tests,Spec}.{java,kt,scala,cs}"
-  - "**/{server,backend,api,services}/**/*.{test,spec}.{ts,js}"
+  - "**/{server,backend,jobs,workers,consumers}/**/*.{test,spec}.{ts,js}"
+  - "**/apps/{api,server,backend,worker}*/**/*.{test,spec}.{ts,js}"
+  - "**/*.{controller,repository,entity,job,worker,consumer}.{test,spec}.{ts,js}"
 ---
 
 # Backend tests
 
 Follow the repo's testing guide first; these are the defaults where it says
 nothing.
+
+For code that serves requests, runs jobs or owns stored data. In a CLI, a
+library or a one-off script, apply only what fits it.
 
 - **Test each behaviour once, at its own layer.** A caller's test asserts it
   called the collaborator with the right arguments; the collaborator's own test
@@ -60,4 +65,4 @@ nothing.
   test per case instead.
 - **Mirror the code:** one test file per unit, named after it, and the test
   name says what it asserts.
-- **Remove what removed code orphaned:** shared examples, mocks, fixtures.
+- **Remove what removed code orphaned:** shared test helpers, mocks, fixtures.

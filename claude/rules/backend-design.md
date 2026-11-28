@@ -1,13 +1,19 @@
 ---
 paths:
   - "**/*.{rb,py,go,java,kt,scala,cs,php,ex,exs,rs}"
-  - "**/{server,backend,api,services,jobs,workers,consumers,handlers}/**/*.{ts,js,mjs}"
+  - "**/{server,backend,jobs,workers,consumers}/**/*.{ts,js,mjs}"
+  - "**/apps/{api,server,backend,worker}*/**/*.{ts,js,mjs}"
+  - "**/{app,pages}/api/**/*.{ts,js}"
+  - "**/*.{controller,repository,entity,job,worker,consumer}.{ts,js}"
 ---
 
 # Backend design
 
 Code is read far more often than it is changed. Hard-to-follow code is a defect
 even when it works.
+
+For code that serves requests, runs jobs or owns stored data. In a CLI, a
+library or a one-off script, apply only what fits it.
 
 ## Where logic lives
 
@@ -18,10 +24,10 @@ even when it works.
   missing method: reuse the domain's predicate instead of re-deriving it from
   raw columns or a hand-picked list of statuses, because copies drift when
   the definition changes.
-- **Variants own their behaviour.** When behaviour differs per type, the
-  variant's own class or handler holds it; generic orchestrators and base
-  classes only dispatch. No `if kind == X` special cases in shared code, and
-  define a variant by what it is, not as "not A and not B", which silently
+- **Each variant's behaviour lives in one place:** its own class or handler,
+  or one exhaustive match over a closed type, whichever the language makes
+  idiomatic. Shared code doesn't grow `if kind == X` special cases, and a
+  variant is defined by what it is, not as "not A and not B", which silently
   matches the next variant added.
 - **Configuration is data.** Per-variant switches are an attribute on the
   configuration record, not a list of hardcoded types, IDs or people in code.
@@ -42,12 +48,12 @@ even when it works.
 ## Simplicity
 
 - **Reuse before you add.** Search for an existing field, endpoint, job,
-  helper, scope or retry utility that already does this, and extend it.
+  helper, query or retry utility that already does this, and extend it.
   Parallel versions drift, and consumers can't tell which one to trust.
 - **Prefer the shape a reader can predict:** guard clauses over nested
   conditions, one linear method over a chain of tiny ones, explicit arguments
-  over base-class constants or metaprogramming, plain `case` over dynamic
-  dispatch on data.
+  over base-class constants or metaprogramming, a plain `switch` or `match`
+  over calling methods by a name built from data.
 - **Code that computes doesn't change state.** A method that calculates or
   reads doesn't also update a flag or mutate its inputs; state changes are
   explicit, named and in one place.
@@ -68,8 +74,9 @@ even when it works.
   its unit.
 - **Implementation details stay private.** Adding a cache or an optimisation
   doesn't change the public interface.
-- **Caches store keys, not blobs,** and derive keys from the record's version
-  instead of invalidating by hand; align expiry with the refresh cadence.
+- **Derive cache keys from what the value depends on** (the record's version
+  or update time) instead of invalidating by hand, and align expiry with the
+  refresh cadence.
 - **Extend a library before replacing it.**
 
 ## API contracts
@@ -82,8 +89,9 @@ even when it works.
   loosely related nullable fields; values that must come together travel in
   one input; don't accept two inputs that can contradict each other.
 - **Group related fields** under a nested object instead of prefixed flat
-  fields; namespace new root fields under their domain.
-- **Mutations return the object the client re-renders,** usually the parent.
+  fields.
+- **A write returns what the client needs to show its result,** usually the
+  updated resource, so the client doesn't have to fetch it again.
 - **Arguments are strict and composable:** required when required, one enum or
   list instead of a boolean per case.
 - **Write the published schema explicitly.** Don't generate fields or enum
@@ -91,7 +99,7 @@ even when it works.
   keeps them in step with their source.
 - **Never break a published contract.** Removing a field or enum value waits
   until every client has stopped using it; old clients live for months. A new
-  concrete type behind a polymorphic field, or a new format for a stored key,
+  variant in a union or polymorphic field, or a new format for a stored key,
   breaks them too. A deprecation note names any behaviour difference in the
   replacement.
 

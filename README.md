@@ -66,8 +66,8 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `readiness-reviewer` | `work-plan-review` | Checks a ticket's claims against the code and returns gaps and questions. | `work-plan` (`review-checklist.md`, `definition-of-ready.md`, `design.md`), `bash-guard.sh` hook, Figma plugin |
 | `ticket-validator` | `work-work` | Checks that a branch implements its ticket, using only the ticket and the diff, and runs the repo's checks; returns PASS or FAIL with a gap list. | `bash-guard.sh` hook |
 | `design-validator` | `work-work` | For tickets with a Design section: checks the UI against the design, by Figma values row by row, by the node's screenshot where the file has no values, or by the elements on an image mockup; returns PASS or FAIL with a gap list. | `work-plan` (`design.md`), `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP |
-| `pr-reviewer` | `pr-review` | Reviews one change against its ticket and every frontend, backend and repo rule its paths match: a runtime pass for backend files (failures, retries, idempotency, races, data safety, rollout) and a design pass for every file. Returns a verdict and findings by severity, each with its cost and a fix. | the frontend and `backend-*` rules, `bash-guard.sh` hook |
-| `rules-reviewer` | `work-work` | Finds the CLAUDE.md, AGENTS.md and rule files that apply to a branch's changed files and checks the changed lines against them; returns PASS or FAIL with violations, plus non-blocking notes. | `bash-guard.sh` hook |
+| `pr-reviewer` | `pr-review` | Reviews one change against its ticket and every frontend, backend and repo rule its paths match: a runtime pass for backend files (failures, retries, idempotency, races, data safety, rollout) and a design pass for every file. Returns a verdict and findings by severity, each with its cost and a fix. | `work-plan` (`rule-discovery.md`), the frontend and `backend-*` rules, `bash-guard.sh` hook |
+| `rules-reviewer` | `work-work` | Finds the CLAUDE.md, AGENTS.md and rule files that apply to a branch's changed files and checks the changed lines against them; returns PASS or FAIL with violations, plus non-blocking notes. | `work-plan` (`rule-discovery.md`), `bash-guard.sh` hook |
 
 ## Rules
 
@@ -84,14 +84,19 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `graphql-client` | `*.graphql`, `*.tsx`, `*.jsx`, `useX.ts` | Only in repos with a GraphQL client: props typed from fragments, reuse queries and fragments, cache updates after mutations, mocks typed with fragment types. |
 | `backend-reliability` | backend source | Decide what each failure means, idempotent retries, publish after commit, atomic updates, never guess a match, no silent outcomes. |
 | `backend-data` | backend source, SQL, migrations | Let the database do the work, bounded lists, no N+1, expand/migrate/contract, constraints match validations, trace personal data to every sink. |
-| `backend-design` | backend source | Logic lives with its concept, variants own their behaviour, config as data, simple over clever, build for today with a cheap shape for tomorrow, API contracts for the consumer. |
+| `backend-design` | backend source | Logic lives with its concept, each variant's behaviour in one place, config as data, simple over clever, build for today with a cheap shape for tomorrow, API contracts for the consumer. |
 | `backend-tests` | backend tests | Each behaviour once at its own layer, cover the risky paths, tests that fail when it breaks, real wiring, minimal deterministic setup. |
+| `graphql-api` | `*.graphql`, `graphql/` and `resolvers/` folders, `*.resolver.ts` | Only for a backend that publishes a GraphQL API: namespaced root fields, mutations return what the client re-renders. |
 
 The frontend rules are distilled from ~1,200 of my review comments (2022–2026),
 the backend rules from ~1,300 review comments by two senior backend reviewers:
 each states a pattern raised repeatedly or held when an author pushed back.
 The general rules stay API-agnostic; what only holds for one API style lives in
-its own rule (`graphql-client`), so a REST counterpart can sit next to it.
+its own rule (`graphql-client`, `graphql-api`), so a REST counterpart can sit
+next to it. The backend rules load by language, and for JS/TS only under
+server-side folders and file names (`server/`, `apps/api*/`, `app/api/`,
+`*.controller.ts`, …), since `api/` or `services/` alone also names frontend
+code.
 
 ## Guardrails
 
