@@ -26,7 +26,8 @@ component is presentational: data and callbacks arrive as props.
    props, and never touch the data layer.
    - Each owns its own loading, empty and error rendering: pass it `loading`
      rather than wrapping it in a spinner.
-   - One per visual section (header, chart, table…).
+   - One per visual section (header, chart, table…). A section with its own
+     query and submit, such as an inline form, is its own component.
    - Callback props are `on<Event>`, internal handlers `handle<Event>`.
 4. **Container**: calls the hooks, passes results through services, holds the
    loading and error state, and composes the components. No section JSX, no
