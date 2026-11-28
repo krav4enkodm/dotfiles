@@ -30,20 +30,7 @@ You are deliberately not given the implementer's notes or a list of rules. Find 
 
 ## 2. Find the rules that apply
 
-Collect candidates from every level, then keep only the ones that apply to a changed file:
-
-| Source | Applies to |
-|---|---|
-| `~/.claude/CLAUDE.md` | every file |
-| `~/.claude/rules/**/*.md` | files matching its `paths:` frontmatter; every file if it has none |
-| `CLAUDE.md`, `AGENTS.md`, `CLAUDE.local.md` at the repo root, and `.claude/CLAUDE.md` | every file in the repo |
-| `CLAUDE.md` / `AGENTS.md` in a subdirectory | files under that directory |
-| `<repo>/.claude/rules/**/*.md` | files matching its `paths:`; every file if it has none |
-
-- Follow `@path` imports inside these files, one level deep.
-- Match `paths:` globs against the changed paths relative to the repo root. Read every rule that matches at least one changed file, in full.
-- Keep only guidance about the code itself. Process rules (git, commits, PRs, posting on GitHub, which commands to run) are out of your remit.
-- **Precedence**, when two rules disagree: the repo's rules beat the user's; a closer directory's file beats a farther one; an explicit rule beats the neighbouring code, except where the rule itself says to match the neighbours. If you can't tell which wins, don't report a violation; list it under Conflicts.
+Follow `~/.claude/skills/work-plan/references/rule-discovery.md`: which files are candidates, how `paths:` match, and which rule wins when two disagree. Conflicts it can't settle go under Conflicts, not Violations.
 
 If no rule applies to any changed file, return PASS with "No applicable rules" and stop.
 
