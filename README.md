@@ -80,9 +80,14 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `package-boundaries` | JS/TS source, `package.json`, `tsconfig*.json` | Public entry points, no own-index imports, dependencies point one way, honest manifests. |
 | `frontend-tests` | tests, stories, mocks | Right level, cover what you added, tests that fail when behaviour breaks, select the way a user finds the element, typed mocks next to what they mock. |
 | `graphql-client` | `*.graphql`, `*.tsx`, `*.jsx`, `useX.ts` | Only in repos with a GraphQL client: props typed from fragments, reuse queries and fragments, cache updates after mutations, mocks typed with fragment types. |
+| `backend-reliability` | backend source | Decide what each failure means, idempotent retries, publish after commit, atomic updates, never guess a match, no silent outcomes. |
+| `backend-data` | backend source, SQL, migrations | Let the database do the work, bounded lists, no N+1, expand/migrate/contract, constraints match validations, trace personal data to every sink. |
+| `backend-design` | backend source | Logic lives with its concept, variants own their behaviour, config as data, simple over clever, build for today with a cheap shape for tomorrow, API contracts for the consumer. |
+| `backend-tests` | backend tests | Each behaviour once at its own layer, cover the risky paths, tests that fail when it breaks, real wiring, minimal deterministic setup. |
 
-The coding rules are distilled from ~1,200 of my review comments (2022–2026):
-each states a pattern I raised repeatedly or held when an author pushed back.
+The frontend rules are distilled from ~1,200 of my review comments (2022–2026),
+the backend rules from ~1,300 review comments by two senior backend reviewers:
+each states a pattern raised repeatedly or held when an author pushed back.
 The general rules stay API-agnostic; what only holds for one API style lives in
 its own rule (`graphql-client`), so a REST counterpart can sit next to it.
 
