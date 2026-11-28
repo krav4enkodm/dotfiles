@@ -67,18 +67,15 @@ paths:
   lazy-loaded.
 - **No waterfalls.** A query that waits for another without needing its result,
   or blocks an unrelated section, runs on its own.
-- **Request only the fields used**, and reuse an existing query or fragment
-  before adding a near-copy. Keep a single-use fragment next to its query.
-  A field added to a shared fragment or selection loads everywhere it's used,
-  lists included; when a component starts fetching its own data, remove those
-  fields from the parent's request.
+- **Request only the fields used**, and reuse an existing request before
+  adding a near-copy. A field added to a shared request loads everywhere it's
+  used, lists included; when a component starts fetching its own data, remove
+  those fields from the parent's request.
 - **Use the data client's own status and cache options** instead of hand-rolled
   flags like `isFetched`.
-- **Update after a mutation through the narrowest path.** With a normalised
-  cache, select back the changed fields and the entity's id so only that
-  entity updates. Otherwise refetch through the owner: call the `refetch` of
-  the component that owns the query, rather than a list of query names that
-  hides which screens are affected.
+- **Update after a mutation through the narrowest path:** update or invalidate
+  only the data the mutation changed, through the data client's own mechanism,
+  rather than refetching every screen that might be affected.
 
 ## Loading, errors and permissions
 

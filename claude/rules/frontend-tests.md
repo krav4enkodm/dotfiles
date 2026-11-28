@@ -27,16 +27,18 @@ defaults where it says nothing.
   - Give every input a distinct value: with `{}` or one shared id everywhere,
     swapped props still pass `toHaveBeenCalledWith`.
   - Pair a negative assertion with a positive one on the same selector: a
-    `not.toBeInTheDocument()` stays green after the test id is renamed.
+    `not.toBeInTheDocument()` stays green after the selector stops matching.
   - Don't assert what a mock returns, or repeat an assertion.
 - **Test your code, not the library.** Don't re-check the design system's
   error text, React behaviour or what the type checker guarantees, and don't
   re-implement a third-party component in a mock or mock simple design-system
   primitives. Where the repo has visual snapshots, leave copy and layout to
   them.
-- **Select by test id,** not copy, classes or `id`: one static test id on the
-  element you interact with, reached with `within` and an index rather than ids
-  drilled through props. Never select by a library's internal classes.
+- **Select the way a user finds the element:** by role and accessible name,
+  then label, then text; a test id only where none of those identify it, or
+  where the repo's testing guide says test ids. Scope with `within` rather than
+  ids drilled through props. Never select by classes, `id` or a library's
+  internal markup.
 - **Exact matchers:** `toBe(true)`, not `toBeTruthy()`; `toHaveTextContent`
   matches substrings, so compare exact text with `toBe`.
 - **The name is the spec.** Put the condition in `describe('when …')` and the
@@ -50,7 +52,7 @@ defaults where it says nothing.
   a failure, an empty result or a flag sets it inline.
 - **Typed mocks next to what they mock.** Type mocks and story data with the
   API's generated types, annotated on the fixture itself
-  (`const user: UserFragment = …`), keep them next to the query they mock, and
+  (`const user: User = …`), keep them next to the request they mock, and
   import them instead of building ad-hoc objects with `as` casts. Typed mocks
   stop compiling when the API changes; untyped ones drift silently. Shared
   providers go in one render wrapper.

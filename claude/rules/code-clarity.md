@@ -37,7 +37,7 @@ paths:
 - **A compound condition becomes a function.** When a check combines several
   conditions over one object (a helper call plus a comparison), move it to a
   named, unit-tested function that takes that object:
-  `isDiscountWarningShown(rateCard)`. A simple check stays inline.
+  `isDiscountWarningShown(order)`. A simple check stays inline.
 - **A value used once is inlined**, so the reader doesn't scroll to find it.
   Name an expression only when it reads badly inline.
 - **One job per helper.** Branch and guard at the call site; a helper that
@@ -76,8 +76,7 @@ paths:
   - A boolean is `isX`/`hasX`; follow platform names (`disabled`, not
     `enabled`; `onSuccess`/`onFailure` as a pair). PascalCase for components
     and types, camelCase for functions and values.
-- **The direct form:** `Boolean(x)` over `!!x`, `??` when only null and
-  undefined should fall back, `some` for yes/no, `find` for one match, `filter`
+- **The direct form:** `??` when only null and undefined should fall back, `some` for yes/no, `find` for one match, `filter`
   for many, a `Set` or `Map` for lookups inside loops. Compute what doesn't
   change outside per-item callbacks, and use `some` or `for…of` when you can
   stop early.

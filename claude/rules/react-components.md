@@ -39,15 +39,12 @@ paths:
 
 ## Props
 
-- **Pass an object when the component uses most of its fields** (a fragment
-  object from above is fine). When it uses a few fields of a big object, pass
-  those as primitives, so the call site shows what goes in.
-- **Keep props balanced:** up to about 8. Beyond that, or instead of drilling
-  props through layers, use a slot (`ReactNode` or render prop).
-- **No objects or arrays created inline in render** (`data={{ … }}`, `items={[…]}`):
-  every render makes a new reference, so the props can't be optimised later
-  without reworking them. Pass an existing value: a prop from above, a module
-  constant. Inline functions are fine.
+- **Pass an object when the component uses most of its fields.** When it uses
+  a few fields of a big object, pass those as primitives, so the call site
+  shows what goes in.
+- **Keep props balanced.** When the list keeps growing, or props are drilled
+  through layers only to be passed on, use a slot (`ReactNode` or render prop)
+  or split the component.
 - **Variants are a fixed set, defined once inside the component.** Expose
   `variant: 'default' | 'media'` with its styles inside, not a `className` or
   colour override, so every place looks the same. When variants need different
@@ -67,14 +64,14 @@ paths:
 - **Experiments are built for removal.** Gate them in one place where the
   component is used (`{isEnabled && <NewBanner />}`), never by reading the flag
   again inside children or shared components, or passing it into services.
-  If the flag loads asynchronously, render a skeleton until it arrives, not
-  the default variant, and fetch only the active variant's data: rendering the
-  old one first flickers and fires its requests for nothing.
+  Fetch only the active variant's data. While an asynchronous flag loads, show
+  a skeleton rather than either variant: rendering the old one first flickers
+  and fires its requests for nothing.
 
 ## Structure
 
-- **One component per file.** A second real component, even a small one, gets
-  its own module.
+- **One component per file,** unless the repo keeps small private components
+  next to the one that uses them.
 - **Components live at module level and render as `<X />`.** A component
   defined inside another gets a new identity every render, so React remounts
   it and drops its state; calling one as `renderX()` bypasses React. Plain

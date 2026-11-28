@@ -77,10 +77,13 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `react-state-and-data` | `*.tsx`, `*.jsx`, `useX.ts` | One source of truth, handlers over effects, memoize only for a real problem, form state mirrors the mutation input, fetch where the flow starts, every loading and error state. |
 | `code-clarity` | JS/TS source | No unexplained code, lint as a strong default, when to extract and when to inline, positive booleans and domain names, the traps (zero, money, empty lists). |
 | `package-boundaries` | JS/TS source, `package.json`, `tsconfig*.json` | Public entry points, no own-index imports, dependencies point one way, honest manifests. |
-| `frontend-tests` | tests, stories, mocks | Right level, cover what you added, tests that fail when behaviour breaks, typed mocks next to their query. |
+| `frontend-tests` | tests, stories, mocks | Right level, cover what you added, tests that fail when behaviour breaks, select the way a user finds the element, typed mocks next to what they mock. |
+| `graphql-client` | `*.graphql`, `*.tsx`, `*.jsx`, `useX.ts` | Only in repos with a GraphQL client: props typed from fragments, reuse queries and fragments, cache updates after mutations, mocks typed with fragment types. |
 
 The coding rules are distilled from ~1,200 of my review comments (2022–2026):
 each states a pattern I raised repeatedly or held when an author pushed back.
+The general rules stay API-agnostic; what only holds for one API style lives in
+its own rule (`graphql-client`), so a REST counterpart can sit next to it.
 
 ## Guardrails
 

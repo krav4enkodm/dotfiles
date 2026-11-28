@@ -15,7 +15,8 @@ How code in a multi-package repo depends on other code.
   entry point only what other packages consume.
 - **Inside a package, import from the defining file,** never from the package's
   own index: it creates cycles. Don't add `index.ts` re-export files below the
-  package root; the entry point is the only one. When two modules import each
+  package root unless the package already uses them: each one is another way
+  into the same code and a common source of cycles. When two modules import each
   other, move the shared types into their own file.
 - **Dependencies point one way.**
   - A shared library never imports from an app or a feature library; it

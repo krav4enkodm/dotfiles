@@ -21,8 +21,8 @@ source of truth; bend the code to the types, never the types to the code.
 - **Narrow, don't cast.** No `as T`, `!` or `@ts-ignore` to quiet the checker:
   a cast on a nullable value turns `null` into a runtime crash, and
   `{…} as Record<…>` accepts any wrong key. Filter nullish items once with a
-  type predicate (`items.filter((x): x is Item => x != null)`), add the missing
-  field to the fragment or selection, or fix the type upstream (a schema too
+  type predicate (`items.filter((x): x is Item => x != null)`), request the
+  missing field from the API, or fix the type upstream (a schema too
   broad is fixed in the schema). Use `Enum.MEMBER as const`, never
   `'literal' as Enum.MEMBER`.
   Values from the URL are strings: parse them. Casting back and forth between
@@ -34,12 +34,6 @@ source of truth; bend the code to the types, never the types to the code.
   own type (`ComponentProps<typeof Select>['onChange']`, `ButtonProps['size']`;
   in tests too, never a re-declared `Props`) and built-in utilities
   (`NonNullable`, `Pick`).
-- **With GraphQL, type props from fragments, never from the query.** When a
-  component needs part of a query result, define a fragment for it instead of
-  `Pick<>` chains or `NonNullable<Q['a']['b']>['nodes'][number]`. Any query that
-  spreads the fragment then fits the component, and a schema type holds fields
-  the query never fetched. Pass the fragment object through (`item={edge.node}`)
-  instead of rebuilding it.
 - **Don't borrow a type for a field that only shares its name.** A client-side
   `status` isn't the API's `status`; declare it separately.
 - **Enums for closed sets.** Compare against and store the generated or shared
@@ -62,5 +56,5 @@ source of truth; bend the code to the types, never the types to the code.
 - **Let TS infer what it can:** return types, and `useState('')` rather than
   `useState<string>('')`. Add a generic only when the initial value doesn't
   describe the full type. Use `import type` for types.
-- **Name the props type** (`interface Props`) next to the component, not inline
-  in the parameter list.
+- **Name the props type** next to the component, not inline in the parameter
+  list, with the repo's choice of `interface` or `type`.
