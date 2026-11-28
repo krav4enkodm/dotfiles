@@ -53,7 +53,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `work-plan-contracts` | Phase of `work-plan`: fixes the shapes parallel tickets share (API, view-models, props, fixtures) before any ticket exists. | `work-plan` (`plan-files.md`) |
 | `work-plan-split` | Phase of `work-plan`: cuts brief and contracts into ticket drafts and waves, until `plan.mjs check` passes. | `work-plan` (`plan-files.md`, `definition-of-ready.md`, `design.md`) |
 | `work-plan-review` | Phase of `work-plan`: one readiness-review round per run, fixing what the code settles and recording the rest as questions. | `work-plan` (`review-checklist.md`, `definition-of-ready.md`), `readiness-reviewer` agent |
-| `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked by an independent validator against its ticket and by an independent reviewer against the coding rules, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` and `rules-reviewer` agents, herdr |
+| `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked in parallel by independent agents against its ticket, the coding rules and, for UI tickets, the design, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator`, `rules-reviewer` and `design-validator` agents, herdr |
 | `work-clean` | Runs only as `/work-clean`. Removes the herdr worktrees whose PRs have merged: closes the workspace, removes the checkout and deletes the local branch. Skips any worktree with uncommitted changes, commits beyond the merged PR, or a working agent. | herdr, `gh` |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
 | `agent-login` | Signs Claude's browser in to a web app with a username and password from 1Password: `op run` hands them to a script that types them into the login form, so they never enter the conversation. One env file of `op://` references per app in `~/.config/agent-login/`. | `chrome-devtools` MCP (debugging port 9333), 1Password CLI |
@@ -63,7 +63,8 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | Agent | Used by | What it does | Depends on |
 |---|---|---|---|
 | `readiness-reviewer` | `work-plan-review` | Checks a ticket's claims against the code and returns gaps and questions. | `work-plan` (`review-checklist.md`, `definition-of-ready.md`, `design.md`), `bash-guard.sh` hook, Figma plugin |
-| `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket, the diff and the running app; returns PASS or FAIL with a gap list. | `work-plan` (`design.md`), `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP (UI tickets) |
+| `ticket-validator` | `work-work` | Checks that a branch implements its ticket, using only the ticket and the diff, and runs the repo's checks; returns PASS or FAIL with a gap list. | `bash-guard.sh` hook |
+| `design-validator` | `work-work` | For tickets with a Design section: checks the UI against the design, by Figma values row by row, by the node's screenshot where the file has no values, or by the elements on an image mockup; returns PASS or FAIL with a gap list. | `work-plan` (`design.md`), `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP |
 | `rules-reviewer` | `work-work` | Finds the CLAUDE.md, AGENTS.md and rule files that apply to a branch's changed files and checks the changed lines against them; returns PASS or FAIL with violations, plus non-blocking notes. | `bash-guard.sh` hook |
 
 ## Rules
@@ -96,8 +97,9 @@ the usual form of a command, so treat them as guardrails, not a sandbox.
 - **`hooks/bash-guard.sh session`**, on every Bash call: no `git commit` on the
   default branch, and `gh pr create` needs `--draft`.
 - **`bash-guard.sh reviewer` / `validator`**, in the agents' frontmatter: the
-  readiness and rules reviewers run read-only commands only; the validator can
-  run the repo's checks but can't change git state or call `gh`.
+  readiness and rules reviewers run read-only commands only; the ticket and
+  design validators can run the repo's checks and the app but can't change git
+  state or call `gh`.
 
 `work-plan/references/` is shared: renaming or moving a file there breaks the
 skills and agents listed above.
@@ -106,7 +108,7 @@ skills and agents listed above.
 
 ```
 /work-plan  →  recon → brief ✋ → contracts ✋ → split → review (max 3 rounds) ✋ → tickets + wave table in the tracker
-/work-work  →  per ticket, once its blockers pass (or merge, for 2+): ticket.md → herdr worktree → worker Claude → validator + rules reviewer → draft PR + demo media
+/work-work  →  per ticket, once its blockers pass (or merge, for 2+): ticket.md → herdr worktree → worker Claude → ticket, rules and design validators in parallel → draft PR + demo media
 you         →  review and merge the draft PRs; iterate in the worker panes or via PR comments
 /work-clean →  remove the worktrees, workspaces and local branches of merged PRs
 ```

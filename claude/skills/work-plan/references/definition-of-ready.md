@@ -55,7 +55,7 @@ Expected: <what should happen>. Actual: <what happens>. Seen in: <environment, v
 ## Done when
 
 - Tests: <what they prove>
-- Design (UI tickets): every element in the Design section matches its node in the running app.
+- Design (UI tickets): every element in the Design section matches its design node or mockup in the running app.
 - <Environment>: <manual check>
 
 ## Setup (outside the diff)
