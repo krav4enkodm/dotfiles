@@ -56,7 +56,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `work-work` | Runs only as `/work-work`. Runs a plan or a set of ready tickets: each ticket starts in its own herdr worktree with a separate Claude worker as soon as its blockers allow, is checked by an independent validator against its ticket and by an independent reviewer against the coding rules, and gets a draft PR. | `work-plan` (`definition-of-ready.md`, `trackers.md`, `design.md`), `ticket-validator` and `rules-reviewer` agents, herdr |
 | `work-clean` | Runs only as `/work-clean`. Removes the herdr worktrees whose PRs have merged: closes the workspace, removes the checkout and deletes the local branch. Skips any worktree with uncommitted changes, commits beyond the merged PR, or a working agent. | herdr, `gh` |
 | `open-pr` | Opens or rewrites a PR description, following the repo's PR template when it has one; attaches screenshots and demo videos with `gh --attach`; handles `gh stack` stacks. | `gh stack` (optional) |
-| `backend-review` | Reviews a backend change (branch, PR or paths) for runtime risk — failure paths, retries, idempotency, races, data safety, rollout — and design — where logic lives, simplicity, API contracts, tests. Reports findings by severity, each with its cost and a fix; read-only, never posts. | the `backend-*` rules, `gh` |
+| `pr-review` | Reviews a PR or branch, someone else's or your own: resolves the refs, fetches the PR head without checking it out, gathers the description and ticket, and hands them to the `pr-reviewer` agent so the diff never fills the conversation. Relays a verdict and findings by severity, each with its cost and a fix; never posts. | `pr-reviewer` agent, `gh` |
 | `agent-login` | Signs Claude's browser in to a web app with a username and password from 1Password: `op run` hands them to a script that types them into the login form, so they never enter the conversation. One env file of `op://` references per app in `~/.config/agent-login/`. | `chrome-devtools` MCP (debugging port 9333), 1Password CLI |
 
 ## Agents
@@ -66,6 +66,7 @@ install (after a backup to `~/.claude/backups/`). How the installer works and wh
 | `readiness-reviewer` | `work-plan-review` | Checks a ticket's claims against the code and returns gaps and questions. | `work-plan` (`review-checklist.md`, `definition-of-ready.md`, `design.md`), `bash-guard.sh` hook, Figma plugin |
 | `ticket-validator` | `work-work` | Checks a branch against its ticket using only the ticket, the diff and the running app; returns PASS or FAIL with a gap list. | `work-plan` (`design.md`), `bash-guard.sh` hook, Figma plugin, `chrome-devtools` MCP (UI tickets) |
 | `rules-reviewer` | `work-work` | Finds the CLAUDE.md, AGENTS.md and rule files that apply to a branch's changed files and checks the changed lines against them; returns PASS or FAIL with violations, plus non-blocking notes. | `bash-guard.sh` hook |
+| `pr-reviewer` | `pr-review` | Reviews one change against its ticket and every frontend, backend and repo rule its paths match: a runtime pass for backend files (failures, retries, idempotency, races, data safety, rollout) and a design pass for every file. Returns a verdict and findings by severity, each with its cost and a fix. | the frontend and `backend-*` rules, `bash-guard.sh` hook |
 
 ## Rules
 
@@ -102,7 +103,7 @@ the usual form of a command, so treat them as guardrails, not a sandbox.
 - **`hooks/bash-guard.sh session`**, on every Bash call: no `git commit` on the
   default branch, and `gh pr create` needs `--draft`.
 - **`bash-guard.sh reviewer` / `validator`**, in the agents' frontmatter: the
-  readiness and rules reviewers run read-only commands only; the validator can
+  readiness, rules and PR reviewers run read-only commands only; the validator can
   run the repo's checks but can't change git state or call `gh`.
 
 `work-plan/references/` is shared: renaming or moving a file there breaks the
